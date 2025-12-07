@@ -1,7 +1,14 @@
+'use client'
 import Image from 'next/image'
 import React from 'react'
 
 const Nav = () => {
+    const Login = () => {
+        window.location.href = "/login";
+    }
+    const Signup = () => {
+        window.location.href = "/signup";
+    }
   return (
     <div className='flex items-center bg-white z-[999] justify-between px-4 shadow w-full h-[15vh] fixed ' >
             <div className='flex items-center gap-2'>
@@ -23,8 +30,8 @@ const Nav = () => {
             </div>
 
             <div className='flex items-center gap-2'>
-                <button className='bg-green-700 text-sm text-white p-2 px-4 rounded font-bold'>Login</button>
-                <button className='text-sm font-bold '>Signup</button>
+                <button onClick={()=> Login()} className='bg-green-700 cursor-pointer  hover:bg-green-600 text-sm text-white p-2 px-4 rounded font-bold'>Login</button>
+                <button onClick={()=> Signup()} className='text-sm font-bold cursor-pointer hover:bg-green-700 p-2 px-4 rounded  '>Signup</button>
             </div>
     </div>
   )
