@@ -12,8 +12,8 @@ export default function Home() {
     <div className="min-h-screen flex flex-col ">
       <Nav />
       <Splash />
-      <About />
       <Events />
+      <About />
       <Shop />
       <Contacts />
       <Footer />

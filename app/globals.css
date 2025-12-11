@@ -23,3 +23,8 @@
   background-position: center;
   background-repeat: no-repeat;
 }
+
+.eventcard{
+  max-width: 100%;
+  overflow-x: hidden;
+}

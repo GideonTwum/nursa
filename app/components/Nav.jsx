@@ -21,17 +21,35 @@ const Nav = () => {
             </div>
 
             <div className='flex items-center gap-6'>
-                <p className='text-sm text-green-700'>Home</p>
-                <p className='text-sm text-green-700'>About</p>
-                <p className='text-sm text-green-700'>Shop</p>
-                <p className='text-sm text-green-700'>Events</p>
-                <p className='text-sm text-green-700'>Gallery</p>
-                <p className='text-sm text-green-700'>Contact</p>
+                <div className='hover:bg-green-700 px-2 rounded'>
+                    <a href="" className='text-sm text-green-700 hover:text-white '>Home</a>
+                </div>
+
+                <div className='hover:bg-green-700 px-2 rounded'>
+                    <a href="" className='text-sm text-green-700 hover:text-white '>About</a>
+                </div>
+
+                <div className='hover:bg-green-700 px-2 rounded'>
+                    <a href="" className='text-sm text-green-700 hover:text-white '>Shop</a>
+                </div>
+
+                <div className='hover:bg-green-700 px-2 rounded'>
+                    <a href="" className='text-sm text-green-700 hover:text-white '>Events</a>
+                </div>
+
+                <div className='hover:bg-green-700 px-2 rounded'>
+                    <a href="" className='text-sm text-green-700 hover:text-white '>Gallery</a>
+                </div>
+
+                <div className='hover:bg-green-700 px-2 rounded'>
+                    <a href="" className='text-sm text-green-700 hover:text-white '>Contact</a>
+                </div>
+                
             </div>
 
             <div className='flex items-center gap-2'>
                 <button onClick={()=> Login()} className='bg-green-700 cursor-pointer  hover:bg-green-600 text-sm text-white p-2 px-4 rounded font-bold'>Login</button>
-                <button onClick={()=> Signup()} className='text-sm font-bold cursor-pointer hover:bg-green-700 p-2 px-4 rounded  '>Signup</button>
+                <button onClick={()=> Signup()} className='text-sm font-bold cursor-pointer hover:bg-green-700 hover:text-white p-2 px-4 rounded  '>Signup</button>
             </div>
     </div>
   )
