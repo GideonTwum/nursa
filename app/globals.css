@@ -3,6 +3,10 @@
 *{
   font-family: Arial, Helvetica, sans-serif;
 }
+
+html{
+  scroll-behavior: smooth;
+}
 .carosel{
   background: linear-gradient(to top, rgba(1, 64, 23, 0.9), rgba(23, 3, 3, 0.1)),url('/images/nursa3.png');
   background-size: cover;

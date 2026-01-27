@@ -22,11 +22,11 @@ const Nav = () => {
 
             <div className='flex items-center gap-6'>
                 <div className='hover:bg-green-700 px-2 rounded'>
-                    <a href="" className='text-sm text-green-700 hover:text-white '>Home</a>
+                    <a href="/" className='text-sm text-green-700 hover:text-white '>Home</a>
                 </div>
 
                 <div className='hover:bg-green-700 px-2 rounded'>
-                    <a href="" className='text-sm text-green-700 hover:text-white '>About</a>
+                    <a href="#about" className='text-sm text-green-700 hover:text-white '>About</a>
                 </div>
 
                 <div className='hover:bg-green-700 px-2 rounded'>
@@ -34,7 +34,7 @@ const Nav = () => {
                 </div>
 
                 <div className='hover:bg-green-700 px-2 rounded'>
-                    <a href="" className='text-sm text-green-700 hover:text-white '>Events</a>
+                    <a href="#events" className='text-sm text-green-700 hover:text-white '>Events</a>
                 </div>
 
                 <div className='hover:bg-green-700 px-2 rounded'>
@@ -42,7 +42,7 @@ const Nav = () => {
                 </div>
 
                 <div className='hover:bg-green-700 px-2 rounded'>
-                    <a href="" className='text-sm text-green-700 hover:text-white '>Contact</a>
+                    <a href="#contacts" className='text-sm text-green-700 hover:text-white '>Contact</a>
                 </div>
                 
             </div>
