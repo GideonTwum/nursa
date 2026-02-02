@@ -9,27 +9,27 @@ import { FaSquareXTwitter } from "react-icons/fa6";
 
 const Contacts = () => {
   return (
-    <div className='min-h-screen flex flex-col  items-center justify-center bg-green-900' id='contacts'>
-      <div className='flex items-center flex-col   '>
-         <h1 className='text-white font-bold text-4xl'>Get In <span className='text-yellow-500'>touch</span></h1>
-         <p className='text-white text-sm'>We'd love to hear from you.</p>
-        <div className='h-[4px] mt-4 bg-yellow-500 w-[5vw]'></div>
+    <div className='min-h-screen flex flex-col items-center justify-center bg-green-900 px-4 py-12' id='contacts'>
+      <div className='flex items-center flex-col text-center'>
+         <h1 className='text-white font-bold text-2xl md:text-3xl lg:text-4xl'>Get In <span className='text-yellow-500'>touch</span></h1>
+         <p className='text-white text-sm mt-2'>We'd love to hear from you.</p>
+        <div className='h-[4px] mt-4 bg-yellow-500 w-16 md:w-20'></div>
       </div>
-      <div className='mt-10 flex  gap-4'>
-        <div className='flex flex-col gap-4'>
-            <div className='flex bg-green-500/30 p-5 rounded-lg w-[30vw] items-center gap-4'>
-              <div className='p-2 bg-green-300/10'>
-                  <MdEmail className='text-2xl text-yellow-500'/>
+      <div className='mt-8 md:mt-10 flex flex-col md:flex-row gap-4 w-full max-w-4xl'>
+        <div className='flex flex-col gap-4 flex-1'>
+            <div className='flex bg-green-500/30 p-4 md:p-5 rounded-lg w-full items-center gap-4'>
+              <div className='p-2 bg-green-300/10 flex-shrink-0'>
+                  <MdEmail className='text-xl md:text-2xl text-yellow-500'/>
               </div>
               <div>
                 <p className='text-white text-sm'>Email</p>
-                <p className='text-white text-sm'>nursavvu@gmail.com</p>
+                <p className='text-white text-sm break-all'>nursavvu@gmail.com</p>
               </div>
             </div>
 
-            <div className='flex bg-green-500/30 p-5 rounded-lg w-[30vw] items-center gap-4'>
-              <div className='p-2 bg-green-300/10'>
-                <FaPhoneAlt className='text-2xl text-yellow-500'/>
+            <div className='flex bg-green-500/30 p-4 md:p-5 rounded-lg w-full items-center gap-4'>
+              <div className='p-2 bg-green-300/10 flex-shrink-0'>
+                <FaPhoneAlt className='text-xl md:text-2xl text-yellow-500'/>
               </div>
               <div>
                 <p className='text-white text-sm'>Phone</p>
@@ -37,9 +37,9 @@ const Contacts = () => {
               </div>
             </div>
 
-            <div className='flex bg-green-500/30 p-5 rounded-lg w-[30vw] items-center gap-4'>
-              <div className='p-2 bg-green-300/10'>
-                  <FaLocationDot className='text-2xl text-yellow-500'/>
+            <div className='flex bg-green-500/30 p-4 md:p-5 rounded-lg w-full items-center gap-4'>
+              <div className='p-2 bg-green-300/10 flex-shrink-0'>
+                  <FaLocationDot className='text-xl md:text-2xl text-yellow-500'/>
               </div>
               <div>
                 <p className='text-white text-sm'>Location</p>
@@ -48,21 +48,19 @@ const Contacts = () => {
             </div>
         </div>
 
-        <div>
-            <div className='flex flex-col bg-green-500/30 p-5 rounded-lg w-[30vw] gap-4'>  
+        <div className='flex-1 md:flex-none md:w-auto'>
+            <div className='flex flex-col bg-green-500/30 p-4 md:p-5 rounded-lg w-full md:w-auto gap-4'>  
               <div>
-                <p className='text-white text-xl'>Follow Us</p>
+                <p className='text-white text-lg md:text-xl'>Follow Us</p>
               </div>
-              <div className='p-2  flex gap-4 w-[fit-content] rounded'>
-                  <FaTiktok className='text-2xl text-yellow-500 cursor-pointer'/>
-                  <FaInstagramSquare className='text-2xl text-yellow-500 cursor-pointer'/>
-                  <FaFacebook className='text-2xl text-yellow-500 cursor-pointer'/>
-                  <FaSquareXTwitter className='text-2xl text-yellow-500 cursor-pointer'/>
+              <div className='p-2 flex gap-4 flex-wrap'>
+                  <FaTiktok className='text-xl md:text-2xl text-yellow-500 cursor-pointer hover:scale-110 transition-transform'/>
+                  <FaInstagramSquare className='text-xl md:text-2xl text-yellow-500 cursor-pointer hover:scale-110 transition-transform'/>
+                  <FaFacebook className='text-xl md:text-2xl text-yellow-500 cursor-pointer hover:scale-110 transition-transform'/>
+                  <FaSquareXTwitter className='text-xl md:text-2xl text-yellow-500 cursor-pointer hover:scale-110 transition-transform'/>
               </div>
             </div>          
         </div>
-            
-
       </div>
     </div>
   )
