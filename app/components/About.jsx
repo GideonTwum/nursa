@@ -51,12 +51,12 @@ const About = () => {
                     <p className='text-white font-bold text-xl md:text-2xl mb-4'>
                         Welcome to Nursing and Midwifery Students Association (NURSA)
                     </p>
-                    <p className='text-[#ccc] leading-loose text-sm md:text-base'>
-                        Welcome to the Nursing Students' community. On behalf of the entire leadership and student body, I am delighted to have you here. Nursing is more than a course of study—it is a calling grounded in compassion, discipline, and service to humanity.
+                    <p className='text-[#ccc] leading-loose text-sm md:tex'>
+                        Welcome to the Nursing Students' community. On behalf of the entire leadership and student body, I am delighted to have <br /> you here. Nursing is more than a course of study—it is a calling grounded in compassion, discipline, and service to humanity.
                         <br /><br />
-                        As students, you are being shaped not only academically, but also ethically and professionally to meet the demands of the healthcare system. Our association is committed to supporting your academic journey, promoting unity, and creating opportunities for growth, leadership, and excellence.
+                        As students, you are being shaped not only academically, but also ethically and professionally to meet the demands of the <br /> healthcare system. Our association is committed to supporting your academic journey, promoting unity, and creating opportu- <br />nities for growth, leadership, and excellence.
                         <br /><br />
-                        I encourage you to stay engaged, support one another, and make the most of every opportunity available to you. Together, let us uphold the values of the nursing profession and strive for excellence in all we do.
+                        I encourage you to stay engaged, support one another, and make the most of every opportunity available to you. Together, <br />let us uphold the values of the nursing profession and strive for excellence in all we do.
                     </p>
                 </div>
             </div>

@@ -1,22 +1,25 @@
 import Image from 'next/image'
 import React from 'react'
+import { FaCalendarAlt } from "react-icons/fa";
 
 const EventCard = ({title, desc, image, date}) => {
   return (
-    <div className='bg-white rounded w-[50vw] p-2 shadow-lg spread-4  h-[60vh] flex items-center gap-2'>
-        <div >
+    <div className='bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 w-full max-w-sm flex flex-col'>
+        <div className='relative w-full h-48 md:h-52'>
             <Image 
-            width={200} 
-            height={200} 
-            src={image}
-            alt='event image'
-            className='rounded object-cover'
+                src={image}
+                alt={title || 'event image'}
+                fill
+                className='object-cover'
             />
         </div>
-        <div className='p-2 w-[60%] flex flex-col gap-2'>
-            <h1 className='text-green-900 font-bold text-lg'>{title}</h1>
-            <p className='text-sm text-gray-600'>{desc}</p>
-            <p className='text-sm text-gray-600'>{date}</p>
+        <div className='p-4 md:p-5 flex flex-col gap-3 flex-1'>
+            <h2 className='text-green-900 font-bold text-lg md:text-xl line-clamp-2'>{title}</h2>
+            <p className='text-sm text-gray-600 line-clamp-3 flex-1'>{desc}</p>
+            <div className='flex items-center gap-2 text-yellow-600 mt-2'>
+                <FaCalendarAlt className='text-sm' />
+                <p className='text-sm font-medium'>{date}</p>
+            </div>
         </div>
     </div>
   )
