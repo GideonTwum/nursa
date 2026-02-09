@@ -29,6 +29,10 @@ const Nav = () => {
         window.location.href = "/shop"
     }
 
+    const toElections = () => {
+        window.location.href = "https://nursa-ehub-2026.onrender.com/index.html"
+    }
+
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen)
     }
@@ -77,6 +81,10 @@ const Nav = () => {
 
                 <div className='hover:border-b hover:border-green-700 px-2 rounded'>
                     <a onClick={() => toGallery()} className='text-sm text-green-700 cursor-pointer'>Gallery</a>
+                </div>
+
+                <div onClick={() => toElections()} className='hover:border-b hover:border-green-700 px-2 rounded'>
+                    <p className='text-sm text-green-700 cursor-pointer'>Elections</p>
                 </div>
 
                 <div className='hover:border-b hover:border-green-700 px-2 rounded'>
