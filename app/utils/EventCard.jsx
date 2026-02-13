@@ -2,9 +2,12 @@ import Image from 'next/image'
 import React from 'react'
 import { FaCalendarAlt } from "react-icons/fa";
 
-const EventCard = ({title, desc, image, date}) => {
+const EventCard = ({ title, desc, image, date, id }) => {
+  const Wrapper = id ? 'a' : 'div'
+  const wrapperProps = id ? { href: `/events/${id}`, className: 'bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 w-full max-w-sm flex flex-col cursor-pointer block' } : { className: 'bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 w-full max-w-sm flex flex-col' }
+
   return (
-    <div className='bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 w-full max-w-sm flex flex-col'>
+    <Wrapper {...wrapperProps}>
         <div className='relative w-full h-48 md:h-52'>
             <Image 
                 src={image}
@@ -20,8 +23,11 @@ const EventCard = ({title, desc, image, date}) => {
                 <FaCalendarAlt className='text-sm' />
                 <p className='text-sm font-medium'>{date}</p>
             </div>
+            {id && (
+                <span className='mt-2 text-green-700 font-medium text-sm hover:underline'>Learn more →</span>
+            )}
         </div>
-    </div>
+    </Wrapper>
   )
 }
 

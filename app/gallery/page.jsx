@@ -1,65 +1,28 @@
 'use client'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { FaArrowLeft, FaTimes, FaChevronLeft, FaChevronRight } from "react-icons/fa"
 
-const galleryImages = [
-  {
-    id: 1,
-    src: "/images/nursa1.png",
-    title: "NURSA Students in Action",
-    category: "Campus Life"
-  },
-  {
-    id: 2,
-    src: "/images/nursa2.png",
-    title: "Clinical Training Session",
-    category: "Academics"
-  },
-  {
-    id: 3,
-    src: "/images/nursa3.png",
-    title: "Student Group Photo",
-    category: "Campus Life"
-  },
-  {
-    id: 4,
-    src: "/images/nursa4.png",
-    title: "Nursing Skills Practice",
-    category: "Academics"
-  },
-  {
-    id: 5,
-    src: "/images/dinner.png",
-    title: "Annual Dinner & Awards",
-    category: "Events"
-  },
-  {
-    id: 6,
-    src: "/images/presido.png",
-    title: "NURSA President",
-    category: "Leadership"
-  },
-  {
-    id: 7,
-    src: "/images/nursabg.png",
-    title: "Campus Grounds",
-    category: "Campus Life"
-  },
-  {
-    id: 8,
-    src: "/images/nursalogo.jpg",
-    title: "NURSA Official Logo",
-    category: "Branding"
-  }
-]
-
-const categories = ["All", "Campus Life", "Academics", "Events", "Leadership", "Branding"]
-
 const Page = () => {
+  const [galleryImages, setGalleryImages] = useState([])
+  const [categories, setCategories] = useState(["All"])
+  const [loading, setLoading] = useState(true)
   const [selectedCategory, setSelectedCategory] = useState("All")
   const [lightboxOpen, setLightboxOpen] = useState(false)
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
+
+  useEffect(() => {
+    fetch('/api/gallery')
+      .then(res => res.ok ? res.json() : null)
+      .then(data => {
+        if (data) {
+          setGalleryImages(data.images?.map(img => ({ ...img, src: img.url })) || [])
+          setCategories(data.categories || ['All'])
+        }
+        setLoading(false)
+      })
+      .catch(() => setLoading(false))
+  }, [])
 
   const filteredImages = selectedCategory === "All" 
     ? galleryImages 
@@ -134,11 +97,18 @@ const Page = () => {
       <div className='max-w-6xl mx-auto px-4 py-10'>
         <div className='mb-6'>
           <p className='text-gray-600'>
-            Showing {filteredImages.length} {filteredImages.length === 1 ? 'photo' : 'photos'}
-            {selectedCategory !== "All" && ` in ${selectedCategory}`}
+            {loading ? 'Loading...' : (
+              <>Showing {filteredImages.length} {filteredImages.length === 1 ? 'photo' : 'photos'}
+              {selectedCategory !== "All" && ` in ${selectedCategory}`}</>
+            )}
           </p>
         </div>
 
+        {loading ? (
+          <div className='flex justify-center py-16'>
+            <div className='animate-spin rounded-full h-12 w-12 border-b-2 border-green-700'></div>
+          </div>
+        ) : (
         <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4'>
           {filteredImages.map((image, index) => (
             <div 
@@ -168,8 +138,9 @@ const Page = () => {
             </div>
           ))}
         </div>
+        )}
 
-        {filteredImages.length === 0 && (
+        {!loading && filteredImages.length === 0 && (
           <div className='text-center py-20'>
             <p className='text-gray-500 text-lg'>No photos found in this category.</p>
           </div>

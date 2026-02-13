@@ -1,4 +1,5 @@
-import React from 'react'
+'use client'
+import React, { useState } from 'react'
 import { MdEmail } from "react-icons/md";
 import { FaPhoneAlt } from "react-icons/fa";
 import { FaLocationDot } from "react-icons/fa6";
@@ -8,6 +9,38 @@ import { FaFacebook } from "react-icons/fa";
 import { FaSquareXTwitter } from "react-icons/fa6";
 
 const Contacts = () => {
+  const [form, setForm] = useState({ name: '', email: '', subject: '', message: '' })
+  const [sending, setSending] = useState(false)
+  const [status, setStatus] = useState(null) // 'success' | 'error'
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    if (!form.name.trim() || !form.email.trim() || !form.subject.trim() || !form.message.trim()) {
+      setStatus('error')
+      return
+    }
+    setSending(true)
+    setStatus(null)
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form)
+      })
+      const data = await res.json().catch(() => ({}))
+      if (res.ok) {
+        setForm({ name: '', email: '', subject: '', message: '' })
+        setStatus('success')
+      } else {
+        setStatus('error')
+      }
+    } catch {
+      setStatus('error')
+    } finally {
+      setSending(false)
+    }
+  }
+
   return (
     <div className='min-h-screen flex flex-col items-center justify-center bg-green-900 px-4 py-12' id='contacts'>
       <div className='flex items-center flex-col text-center'>
@@ -61,6 +94,60 @@ const Contacts = () => {
               </div>
             </div>          
         </div>
+      </div>
+
+      {/* Contact Form */}
+      <div className='mt-10 w-full max-w-2xl'>
+        <h2 className='text-white font-bold text-xl md:text-2xl mb-4 text-center'>Send us a message</h2>
+        <form onSubmit={handleSubmit} className='flex flex-col gap-4 bg-green-500/30 p-6 rounded-xl'>
+          <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
+            <input
+              type='text'
+              placeholder='Your name'
+              value={form.name}
+              onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
+              className='px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-yellow-500'
+              required
+            />
+            <input
+              type='email'
+              placeholder='Your email'
+              value={form.email}
+              onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
+              className='px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-yellow-500'
+              required
+            />
+          </div>
+          <input
+            type='text'
+            placeholder='Subject'
+            value={form.subject}
+            onChange={e => setForm(f => ({ ...f, subject: e.target.value }))}
+            className='px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-yellow-500'
+            required
+          />
+          <textarea
+            placeholder='Your message'
+            value={form.message}
+            onChange={e => setForm(f => ({ ...f, message: e.target.value }))}
+            rows={4}
+            className='px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-yellow-500 resize-none'
+            required
+          />
+          {status === 'success' && (
+            <p className='text-yellow-400 text-sm'>Thank you! Your message has been sent.</p>
+          )}
+          {status === 'error' && (
+            <p className='text-red-300 text-sm'>Something went wrong. Please try again.</p>
+          )}
+          <button
+            type='submit'
+            disabled={sending}
+            className='bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-semibold py-3 rounded-lg transition-colors cursor-pointer disabled:opacity-70'
+          >
+            {sending ? 'Sending...' : 'Send Message'}
+          </button>
+        </form>
       </div>
     </div>
   )

@@ -1,103 +1,14 @@
 'use client'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { FaCalendarAlt, FaMapMarkerAlt, FaClock, FaArrowLeft } from "react-icons/fa"
 import { MdArticle } from "react-icons/md"
 
-const upcomingEvents = [
-  {
-    id: 1,
-    title: "Annual NURSA Dinner & Awards Night",
-    desc: "Join us for an elegant evening celebrating academic excellence and outstanding contributions to the nursing community. Dress code: Formal attire.",
-    image: "/images/dinner.png",
-    date: "March 15, 2026",
-    time: "6:00 PM - 10:00 PM",
-    location: "Valley View University Auditorium"
-  },
-  {
-    id: 2,
-    title: "Health Outreach Program",
-    desc: "A community health screening and education event where nursing students provide free health services to local communities including blood pressure checks, health education, and basic consultations.",
-    image: "/images/nursa2.png",
-    date: "April 8, 2026",
-    time: "8:00 AM - 4:00 PM",
-    location: "Oyibi Community Center"
-  },
-  {
-    id: 3,
-    title: "Freshers Orientation Week",
-    desc: "Welcome new nursing students with campus tours, mentorship pairing, and introduction to NURSA activities and resources. Meet your seniors and make lifelong connections.",
-    image: "/images/nursa1.png",
-    date: "May 20, 2026",
-    time: "9:00 AM - 3:00 PM",
-    location: "School of Nursing Building"
-  },
-  {
-    id: 4,
-    title: "Clinical Skills Workshop",
-    desc: "Hands-on workshop focusing on essential clinical skills including IV insertion, wound care, and patient assessment techniques guided by experienced practitioners.",
-    image: "/images/nursa3.png",
-    date: "June 5, 2026",
-    time: "10:00 AM - 2:00 PM",
-    location: "Nursing Skills Lab"
-  },
-  {
-    id: 5,
-    title: "Mental Health Awareness Seminar",
-    desc: "An important seminar addressing mental health challenges among healthcare students and professionals. Learn coping strategies and available support resources.",
-    image: "/images/nursa4.png",
-    date: "June 18, 2026",
-    time: "2:00 PM - 5:00 PM",
-    location: "Main Campus Lecture Hall B"
-  },
-  {
-    id: 6,
-    title: "NURSA Sports Gala",
-    desc: "Annual inter-class sports competition featuring football, volleyball, athletics, and more. Come support your class and enjoy a day of fun and fitness.",
-    image: "/images/nursabg.png",
-    date: "July 10, 2026",
-    time: "7:00 AM - 6:00 PM",
-    location: "University Sports Complex"
-  }
-]
-
-const newsArticles = [
-  {
-    id: 1,
-    title: "NURSA President Meets with University Administration",
-    excerpt: "In a historic meeting, NURSA leadership discussed improved facilities and resources for nursing students with the university administration.",
-    date: "February 1, 2026",
-    category: "Announcement"
-  },
-  {
-    id: 2,
-    title: "Nursing Students Excel in National Examinations",
-    excerpt: "Valley View University nursing students achieved a 95% pass rate in the recent national licensing examinations, the highest in the institution's history.",
-    date: "January 28, 2026",
-    category: "Achievement"
-  },
-  {
-    id: 3,
-    title: "New Simulation Lab Equipment Arrives",
-    excerpt: "State-of-the-art simulation mannequins and medical equipment have been installed in the nursing skills laboratory for enhanced practical training.",
-    date: "January 20, 2026",
-    category: "News"
-  },
-  {
-    id: 4,
-    title: "NURSA Partners with Ghana Health Service",
-    excerpt: "A new memorandum of understanding has been signed to provide more internship opportunities for nursing students across various health facilities.",
-    date: "January 15, 2026",
-    category: "Partnership"
-  },
-  {
-    id: 5,
-    title: "Call for Volunteers: Community Health Campaign",
-    excerpt: "NURSA is seeking volunteers for an upcoming community health campaign in underserved areas. Sign up to make a difference in people's lives.",
-    date: "January 10, 2026",
-    category: "Volunteer"
-  }
-]
+const formatDate = (dateStr) => {
+  if (!dateStr) return ''
+  const d = new Date(dateStr)
+  return d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
+}
 
 const EventCard = ({ event }) => (
   <div className='bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 flex flex-col'>
@@ -129,9 +40,9 @@ const EventCard = ({ event }) => (
           <span className='text-sm line-clamp-1'>{event.location}</span>
         </div>
       </div>
-      <button className='mt-3 bg-green-700 hover:bg-green-600 text-white text-sm py-2 px-4 rounded-lg transition-colors cursor-pointer'>
+      <a href={`/events/${event.id}`} className='mt-3 bg-green-700 hover:bg-green-600 text-white text-sm py-2 px-4 rounded-lg transition-colors cursor-pointer text-center inline-block'>
         Learn More
-      </button>
+      </a>
     </div>
   </div>
 )
@@ -144,18 +55,53 @@ const NewsCard = ({ article }) => (
       </span>
       <span className='text-gray-400 text-xs'>{article.date}</span>
     </div>
-    <h3 className='text-green-900 font-bold text-lg mb-2 hover:text-green-700 cursor-pointer'>
+    <h3 className='text-green-900 font-bold text-lg mb-2'>
       {article.title}
     </h3>
     <p className='text-gray-600 text-sm line-clamp-2'>{article.excerpt}</p>
-    <button className='mt-3 text-yellow-600 hover:text-yellow-700 text-sm font-medium flex items-center gap-1 cursor-pointer'>
+    <a href={`/news/${article.id}`} className='mt-3 text-yellow-600 hover:text-yellow-700 text-sm font-medium flex items-center gap-1 cursor-pointer inline-block'>
       Read more →
-    </button>
+    </a>
   </div>
 )
 
 const Page = () => {
   const [activeTab, setActiveTab] = useState('events')
+  const [upcomingEvents, setUpcomingEvents] = useState([])
+  const [newsArticles, setNewsArticles] = useState([])
+  const [eventsLoading, setEventsLoading] = useState(true)
+  const [newsLoading, setNewsLoading] = useState(true)
+
+  useEffect(() => {
+    fetch('/api/events')
+      .then(res => res.ok ? res.json() : null)
+      .then(data => {
+        if (data?.events) {
+          setUpcomingEvents(data.events.map(e => ({
+            ...e,
+            desc: e.description,
+            date: formatDate(e.date)
+          })))
+        }
+        setEventsLoading(false)
+      })
+      .catch(() => setEventsLoading(false))
+  }, [])
+
+  useEffect(() => {
+    fetch('/api/news')
+      .then(res => res.ok ? res.json() : null)
+      .then(data => {
+        if (data?.articles) {
+          setNewsArticles(data.articles.map(a => ({
+            ...a,
+            date: formatDate(a.createdAt)
+          })))
+        }
+        setNewsLoading(false)
+      })
+      .catch(() => setNewsLoading(false))
+  }, [])
 
   const goHome = () => {
     window.location.href = '/'
@@ -218,11 +164,17 @@ const Page = () => {
               <h2 className='text-2xl md:text-3xl font-bold text-green-900 mb-2'>Upcoming Events</h2>
               <p className='text-gray-600'>Don't miss out on these exciting events</p>
             </div>
+            {eventsLoading ? (
+              <div className='flex justify-center py-16'>
+                <div className='animate-spin rounded-full h-12 w-12 border-b-2 border-green-700'></div>
+              </div>
+            ) : (
             <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
               {upcomingEvents.map((event) => (
                 <EventCard key={event.id} event={event} />
               ))}
             </div>
+            )}
           </>
         ) : (
           <>
@@ -230,11 +182,17 @@ const Page = () => {
               <h2 className='text-2xl md:text-3xl font-bold text-green-900 mb-2'>Latest News & Updates</h2>
               <p className='text-gray-600'>Stay informed with what's happening in NURSA</p>
             </div>
+            {newsLoading ? (
+              <div className='flex justify-center py-16'>
+                <div className='animate-spin rounded-full h-12 w-12 border-b-2 border-green-700'></div>
+              </div>
+            ) : (
             <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
               {newsArticles.map((article) => (
                 <NewsCard key={article.id} article={article} />
               ))}
             </div>
+            )}
           </>
         )}
       </div>

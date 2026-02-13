@@ -1,98 +1,29 @@
 'use client'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { FaArrowLeft, FaShoppingCart, FaTimes, FaPlus, FaMinus, FaTrash } from "react-icons/fa"
 import { MdLocalShipping } from "react-icons/md"
 
-const products = [
-  {
-    id: 1,
-    name: "Nursing Fundamentals Prospectus",
-    description: "Complete guide covering basic nursing principles, patient care fundamentals, and essential clinical skills for first-year students.",
-    price: 45.00,
-    image: "/images/nursa1.png",
-    category: "Prospectus",
-    level: "Year 1",
-    inStock: true
-  },
-  {
-    id: 2,
-    name: "Clinical Procedures Manual",
-    description: "Step-by-step illustrated guide for common clinical procedures including vital signs, medication administration, and wound care.",
-    price: 55.00,
-    image: "/images/nursa2.png",
-    category: "Manual",
-    level: "Year 1-2",
-    inStock: true
-  },
-  {
-    id: 3,
-    name: "Pharmacology Study Guide",
-    description: "Comprehensive pharmacology reference covering drug classifications, dosage calculations, and nursing implications.",
-    price: 60.00,
-    image: "/images/nursa3.png",
-    category: "Study Guide",
-    level: "Year 2",
-    inStock: true
-  },
-  {
-    id: 4,
-    name: "Midwifery Essentials Prospectus",
-    description: "Specialized guide for midwifery students covering prenatal care, labor management, and postpartum nursing.",
-    price: 50.00,
-    image: "/images/nursa4.png",
-    category: "Prospectus",
-    level: "Year 2-3",
-    inStock: true
-  },
-  {
-    id: 5,
-    name: "Medical-Surgical Nursing Guide",
-    description: "Advanced study material covering care of patients with medical and surgical conditions across various body systems.",
-    price: 65.00,
-    image: "/images/dinner.png",
-    category: "Study Guide",
-    level: "Year 3",
-    inStock: true
-  },
-  {
-    id: 6,
-    name: "NURSA Scrubs (Top & Bottom)",
-    description: "Official NURSA branded scrubs in green. Comfortable, durable, and professional for clinical rotations.",
-    price: 80.00,
-    image: "/images/nursabg.png",
-    category: "Merchandise",
-    level: "All Years",
-    inStock: true
-  },
-  {
-    id: 7,
-    name: "Anatomy & Physiology Atlas",
-    description: "Detailed anatomical illustrations and physiological explanations essential for understanding human body systems.",
-    price: 70.00,
-    image: "/images/nursa1.png",
-    category: "Study Guide",
-    level: "Year 1",
-    inStock: false
-  },
-  {
-    id: 8,
-    name: "NURSA Lab Coat",
-    description: "Professional white lab coat with NURSA embroidery. Required for laboratory sessions and clinical visits.",
-    price: 45.00,
-    image: "/images/nursa2.png",
-    category: "Merchandise",
-    level: "All Years",
-    inStock: true
-  }
-]
-
 const categories = ["All", "Prospectus", "Study Guide", "Manual", "Merchandise"]
 
 const Page = () => {
+  const [products, setProducts] = useState([])
+  const [loading, setLoading] = useState(true)
   const [selectedCategory, setSelectedCategory] = useState("All")
   const [cart, setCart] = useState([])
   const [isCartOpen, setIsCartOpen] = useState(false)
+  const [checkoutLoading, setCheckoutLoading] = useState(false)
+  const [checkoutError, setCheckoutError] = useState(null)
+
+  useEffect(() => {
+    fetch('/api/products')
+      .then(res => res.ok ? res.json() : null)
+      .then(data => {
+        if (data?.products) setProducts(data.products)
+        setLoading(false)
+      })
+      .catch(() => setLoading(false))
+  }, [])
 
   const filteredProducts = selectedCategory === "All" 
     ? products 
@@ -127,6 +58,41 @@ const Page = () => {
 
   const cartTotal = cart.reduce((total, item) => total + (item.price * item.quantity), 0)
   const cartCount = cart.reduce((count, item) => count + item.quantity, 0)
+
+  const handleCheckout = async () => {
+    const token = localStorage.getItem('nursa_token')
+    if (!token) {
+      window.location.href = '/login?redirect=/shop'
+      return
+    }
+    setCheckoutLoading(true)
+    setCheckoutError(null)
+    try {
+      const items = cart.map(i => ({ productId: i.id, quantity: i.quantity, price: Number(i.price) }))
+      const res = await fetch('/api/orders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify({ items })
+      })
+      const data = await res.json().catch(() => ({}))
+      if (res.ok) {
+        setCart([])
+        setIsCartOpen(false)
+        if (data?.order?.id) {
+          sessionStorage.setItem('order_just_placed', data.order.id)
+          window.location.href = `/orders/${data.order.id}`
+        } else {
+          alert('Order placed successfully! Thank you for your purchase.')
+        }
+      } else {
+        setCheckoutError(data?.error || 'Checkout failed. Please try again.')
+      }
+    } catch {
+      setCheckoutError('Something went wrong. Please try again.')
+    } finally {
+      setCheckoutLoading(false)
+    }
+  }
 
   const goHome = () => {
     window.location.href = '/'
@@ -202,11 +168,18 @@ const Page = () => {
       <div className='max-w-6xl mx-auto px-4 py-10'>
         <div className='mb-6'>
           <p className='text-gray-600'>
-            Showing {filteredProducts.length} {filteredProducts.length === 1 ? 'product' : 'products'}
-            {selectedCategory !== "All" && ` in ${selectedCategory}`}
+            {loading ? 'Loading...' : (
+              <>Showing {filteredProducts.length} {filteredProducts.length === 1 ? 'product' : 'products'}
+              {selectedCategory !== "All" && ` in ${selectedCategory}`}</>
+            )}
           </p>
         </div>
 
+        {loading ? (
+          <div className='flex justify-center py-16'>
+            <div className='animate-spin rounded-full h-12 w-12 border-b-2 border-green-700'></div>
+          </div>
+        ) : (
         <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6'>
           {filteredProducts.map((product) => (
             <div 
@@ -255,6 +228,7 @@ const Page = () => {
             </div>
           ))}
         </div>
+        )}
       </div>
 
       {/* Cart Sidebar */}
@@ -350,8 +324,15 @@ const Page = () => {
                     <MdLocalShipping /> You qualify for free campus delivery!
                   </p>
                 )}
-                <button className='w-full bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-3 rounded-lg transition-colors cursor-pointer'>
-                  Proceed to Checkout
+                {checkoutError && (
+                  <p className='text-red-600 text-sm'>{checkoutError}</p>
+                )}
+                <button
+                  onClick={handleCheckout}
+                  disabled={checkoutLoading}
+                  className='w-full bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-3 rounded-lg transition-colors cursor-pointer disabled:opacity-70'
+                >
+                  {checkoutLoading ? 'Placing order...' : 'Proceed to Checkout'}
                 </button>
                 <button 
                   onClick={() => setIsCartOpen(false)}

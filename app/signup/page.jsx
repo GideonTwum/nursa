@@ -17,8 +17,6 @@ const Page = () => {
     const [error, setError] = useState('')
     const [loading, setLoading] = useState(false)
 
-    const ADMIN_SECRET_CODE = 'NURSA2026' // Secret code for admin registration
-
     const handleChange = (e) => {
         setFormData({
             ...formData,
@@ -27,118 +25,55 @@ const Page = () => {
         setError('')
     }
 
-    const handleSignup = (e) => {
+    const handleSignup = async (e) => {
         e.preventDefault()
         setLoading(true)
         setError('')
 
-        if (isAdmin) {
-            // Admin Signup
-            if (!formData.adminId || !formData.firstName || !formData.lastName || !formData.role || !formData.adminCode || !formData.password) {
-                setError('Please fill in all fields')
+        try {
+            const payload = isAdmin
+                ? {
+                    adminId: formData.adminId,
+                    firstName: formData.firstName,
+                    lastName: formData.lastName,
+                    role: formData.role,
+                    adminCode: formData.adminCode,
+                    password: formData.password,
+                    isAdmin: true
+                }
+                : {
+                    studentId: formData.studentId,
+                    firstName: formData.firstName,
+                    lastName: formData.lastName,
+                    program: formData.program,
+                    password: formData.password
+                }
+
+            const response = await fetch('/api/auth/signup', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            })
+
+            const data = await response.json()
+
+            if (!response.ok) {
+                setError(data.error || 'Signup failed')
                 setLoading(false)
                 return
             }
 
-            if (formData.adminCode !== ADMIN_SECRET_CODE) {
-                setError('Invalid admin registration code')
-                setLoading(false)
-                return
-            }
+            localStorage.setItem('nursa_token', data.token)
+            localStorage.setItem('nursa_current_user', JSON.stringify(data.user))
 
-            if (formData.password.length < 6) {
-                setError('Password must be at least 6 characters')
-                setLoading(false)
-                return
-            }
-
-            // Check if admin already exists
-            const existingAdmins = JSON.parse(localStorage.getItem('nursa_admins') || '[]')
-            const adminExists = existingAdmins.find(admin => admin.adminId === formData.adminId)
-            
-            if (adminExists) {
-                setError('An admin with this ID already exists')
-                setLoading(false)
-                return
-            }
-
-            // Create new admin
-            const newAdmin = {
-                adminId: formData.adminId,
-                firstName: formData.firstName,
-                lastName: formData.lastName,
-                role: formData.role,
-                password: formData.password
-            }
-
-            // Save admin to localStorage
-            existingAdmins.push(newAdmin)
-            localStorage.setItem('nursa_admins', JSON.stringify(existingAdmins))
-
-            // Log the admin in automatically
-            const loggedInAdmin = {
-                adminId: newAdmin.adminId,
-                firstName: newAdmin.firstName,
-                lastName: newAdmin.lastName,
-                role: newAdmin.role,
-                isAdmin: true
-            }
-            localStorage.setItem('nursa_current_admin', JSON.stringify(loggedInAdmin))
-
-            // Redirect to admin dashboard
-            setTimeout(() => {
+            if (data.user.isAdmin) {
                 window.location.href = '/admin'
-            }, 500)
-        } else {
-            // Student Signup
-            if (!formData.studentId || !formData.firstName || !formData.lastName || !formData.program || !formData.password) {
-                setError('Please fill in all fields')
-                setLoading(false)
-                return
-            }
-
-            if (formData.password.length < 6) {
-                setError('Password must be at least 6 characters')
-                setLoading(false)
-                return
-            }
-
-            // Check if user already exists
-            const existingUsers = JSON.parse(localStorage.getItem('nursa_users') || '[]')
-            const userExists = existingUsers.find(user => user.studentId === formData.studentId)
-            
-            if (userExists) {
-                setError('A user with this Student ID already exists')
-                setLoading(false)
-                return
-            }
-
-            // Create new user
-            const newUser = {
-                studentId: formData.studentId,
-                firstName: formData.firstName,
-                lastName: formData.lastName,
-                program: formData.program,
-                password: formData.password
-            }
-
-            // Save user to localStorage
-            existingUsers.push(newUser)
-            localStorage.setItem('nursa_users', JSON.stringify(existingUsers))
-
-            // Log the user in automatically
-            const loggedInUser = {
-                studentId: newUser.studentId,
-                firstName: newUser.firstName,
-                lastName: newUser.lastName,
-                program: newUser.program
-            }
-            localStorage.setItem('nursa_current_user', JSON.stringify(loggedInUser))
-
-            // Redirect to home
-            setTimeout(() => {
+            } else {
                 window.location.href = '/'
-            }, 500)
+            }
+        } catch (err) {
+            setError('Something went wrong. Please try again.')
+            setLoading(false)
         }
     }
 

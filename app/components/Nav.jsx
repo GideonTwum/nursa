@@ -10,11 +10,35 @@ const Nav = () => {
     const [showDropdown, setShowDropdown] = useState(false)
 
     useEffect(() => {
-        // Check if user is logged in
-        const currentUser = localStorage.getItem('nursa_current_user')
-        if (currentUser) {
-            setUser(JSON.parse(currentUser))
+        const token = localStorage.getItem('nursa_token')
+        if (!token) {
+            setUser(null)
+            return
         }
+
+        fetch('/api/auth/me', {
+            headers: { 'Authorization': `Bearer ${token}` }
+        })
+            .then(res => {
+                if (!res.ok) {
+                    localStorage.removeItem('nursa_token')
+                    localStorage.removeItem('nursa_current_user')
+                    setUser(null)
+                    return
+                }
+                return res.json()
+            })
+            .then(data => {
+                if (data?.user) {
+                    setUser(data.user)
+                    localStorage.setItem('nursa_current_user', JSON.stringify(data.user))
+                }
+            })
+            .catch(() => {
+                localStorage.removeItem('nursa_token')
+                localStorage.removeItem('nursa_current_user')
+                setUser(null)
+            })
     }, [])
 
     const Login = () => {
@@ -42,7 +66,9 @@ const Nav = () => {
     }
 
     const handleLogout = () => {
+        localStorage.removeItem('nursa_token')
         localStorage.removeItem('nursa_current_user')
+        localStorage.removeItem('nursa_current_admin')
         setUser(null)
         setShowDropdown(false)
         window.location.href = '/'
@@ -111,9 +137,19 @@ const Nav = () => {
                             <div className='absolute right-0 top-full mt-2 bg-white rounded-lg shadow-lg border py-2 min-w-[200px] z-50'>
                                 <div className='px-4 py-2 border-b'>
                                     <p className='text-sm font-semibold text-green-900'>{user.firstName} {user.lastName}</p>
-                                    <p className='text-xs text-gray-500'>{user.studentId}</p>
-                                    <p className='text-xs text-gray-500'>{user.program}</p>
+                                    <p className='text-xs text-gray-500'>{user.studentId || user.adminId}</p>
+                                    <p className='text-xs text-gray-500'>{user.program || user.role}</p>
                                 </div>
+                                {!user.isAdmin && (
+                                    <a href='/orders' className='block px-4 py-2 text-sm text-green-700 hover:bg-green-50 cursor-pointer'>
+                                        My Orders
+                                    </a>
+                                )}
+                                {user.isAdmin && (
+                                    <a href='/admin' className='block px-4 py-2 text-sm text-green-700 hover:bg-green-50 cursor-pointer'>
+                                        Admin Panel
+                                    </a>
+                                )}
                                 <button 
                                     onClick={handleLogout}
                                     className='w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50 flex items-center gap-2 cursor-pointer'
@@ -145,7 +181,7 @@ const Nav = () => {
                             <FaUserCircle className='text-green-700 text-xl' />
                             <div>
                                 <p className='text-sm font-semibold text-green-700'>{user.firstName} {user.lastName}</p>
-                                <p className='text-xs text-gray-500'>{user.studentId}</p>
+                                <p className='text-xs text-gray-500'>{user.studentId || user.adminId}</p>
                             </div>
                         </div>
                     )}
@@ -159,13 +195,25 @@ const Nav = () => {
                     
                     <div className='flex flex-col gap-2 mt-2 w-full px-8'>
                         {user ? (
-                            <button 
-                                onClick={handleLogout} 
-                                className='bg-red-500 cursor-pointer hover:bg-red-600 text-sm text-white p-2 px-4 rounded font-bold w-full flex items-center justify-center gap-2'
-                            >
-                                <FaSignOutAlt />
-                                Logout
-                            </button>
+                            <>
+                                {!user.isAdmin && (
+                                    <a href='/orders' onClick={toggleMenu} className='bg-green-700 cursor-pointer hover:bg-green-600 text-sm text-white p-2 px-4 rounded font-bold w-full flex items-center justify-center'>
+                                        My Orders
+                                    </a>
+                                )}
+                                {user.isAdmin && (
+                                    <a href='/admin' onClick={toggleMenu} className='bg-gray-700 cursor-pointer hover:bg-gray-600 text-sm text-white p-2 px-4 rounded font-bold w-full flex items-center justify-center'>
+                                        Admin Panel
+                                    </a>
+                                )}
+                                <button 
+                                    onClick={handleLogout} 
+                                    className='bg-red-500 cursor-pointer hover:bg-red-600 text-sm text-white p-2 px-4 rounded font-bold w-full flex items-center justify-center gap-2'
+                                >
+                                    <FaSignOutAlt />
+                                    Logout
+                                </button>
+                            </>
                         ) : (
                             <>
                                 <button onClick={() => Login()} className='bg-green-700 cursor-pointer hover:bg-green-600 text-sm text-white p-2 px-4 rounded font-bold w-full'>Login</button>

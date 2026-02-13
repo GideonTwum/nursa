@@ -1,8 +1,11 @@
 'use client'
 import React, { useState } from 'react'
+import { useSearchParams } from 'next/navigation'
 import { FaUserGraduate, FaUserShield } from 'react-icons/fa'
 
 const Page = () => {
+    const searchParams = useSearchParams()
+    const redirect = searchParams?.get('redirect') || ''
     const [isAdmin, setIsAdmin] = useState(false)
     const [formData, setFormData] = useState({
         studentId: '',
@@ -20,82 +23,48 @@ const Page = () => {
         setError('')
     }
 
-    const handleLogin = (e) => {
+    const handleLogin = async (e) => {
         e.preventDefault()
         setLoading(true)
         setError('')
 
-        if (isAdmin) {
-            // Admin Login
-            if (!formData.adminId || !formData.password) {
+        try {
+            const identifier = isAdmin ? formData.adminId : formData.studentId
+            if (!identifier || !formData.password) {
                 setError('Please fill in all fields')
                 setLoading(false)
                 return
             }
 
-            // Get admins from localStorage
-            const existingAdmins = JSON.parse(localStorage.getItem('nursa_admins') || '[]')
-            
-            // Find admin
-            const admin = existingAdmins.find(
-                a => a.adminId === formData.adminId && a.password === formData.password
-            )
+            const payload = isAdmin
+                ? { adminId: identifier, password: formData.password, isAdmin: true }
+                : { studentId: identifier, password: formData.password }
 
-            if (!admin) {
-                setError('Invalid Admin ID or password')
+            const response = await fetch('/api/auth/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            })
+
+            const data = await response.json()
+
+            if (!response.ok) {
+                setError(data.error || 'Login failed')
                 setLoading(false)
                 return
             }
 
-            // Log the admin in
-            const loggedInAdmin = {
-                adminId: admin.adminId,
-                firstName: admin.firstName,
-                lastName: admin.lastName,
-                role: admin.role,
-                isAdmin: true
+            localStorage.setItem('nursa_token', data.token)
+            localStorage.setItem('nursa_current_user', JSON.stringify(data.user))
+
+            if (data.user.isAdmin) {
+                window.location.href = redirect && redirect.startsWith('/') ? redirect : '/admin'
+            } else {
+                window.location.href = redirect && redirect.startsWith('/') ? redirect : '/'
             }
-            localStorage.setItem('nursa_current_admin', JSON.stringify(loggedInAdmin))
-
-            // Redirect to admin dashboard
-            setTimeout(() => {
-                window.location.href = '/admin'
-            }, 500)
-        } else {
-            // Student Login
-            if (!formData.studentId || !formData.password) {
-                setError('Please fill in all fields')
-                setLoading(false)
-                return
-            }
-
-            // Get users from localStorage
-            const existingUsers = JSON.parse(localStorage.getItem('nursa_users') || '[]')
-            
-            // Find user
-            const user = existingUsers.find(
-                u => u.studentId === formData.studentId && u.password === formData.password
-            )
-
-            if (!user) {
-                setError('Invalid Student ID or password')
-                setLoading(false)
-                return
-            }
-
-            // Log the user in
-            const loggedInUser = {
-                studentId: user.studentId,
-                firstName: user.firstName,
-                lastName: user.lastName,
-                program: user.program
-            }
-            localStorage.setItem('nursa_current_user', JSON.stringify(loggedInUser))
-
-            // Redirect to home
-            setTimeout(() => {
-                window.location.href = '/'
-            }, 500)
+        } catch (err) {
+            setError('Something went wrong. Please try again.')
+            setLoading(false)
         }
     }
 

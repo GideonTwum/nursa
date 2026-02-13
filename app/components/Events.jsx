@@ -1,33 +1,28 @@
 'use client'
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import EventCard from '../utils/EventCard'
 import { FaArrowRightLong } from "react-icons/fa6";
 
-const eventsData = [
-  {
-    id: 1,
-    title: "Annual NURSA Dinner & Awards Night",
-    desc: "Join us for an elegant evening celebrating academic excellence and outstanding contributions to the nursing community.",
-    image: "/images/dinner.png",
-    date: "March 15, 2026"
-  },
-  {
-    id: 2,
-    title: "Health Outreach Program",
-    desc: "A community health screening and education event where nursing students provide free health services to local communities.",
-    image: "/images/nursa2.png",
-    date: "April 8, 2026"
-  },
-  {
-    id: 3,
-    title: "Freshers Orientation Week",
-    desc: "Welcome new nursing students with campus tours, mentorship pairing, and introduction to NURSA activities and resources.",
-    image: "/images/nursa1.png",
-    date: "May 20, 2026"
-  }
-]
+const formatDate = (dateStr) => {
+  if (!dateStr) return ''
+  const d = new Date(dateStr)
+  return d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
+}
 
 const Events = () => {
+  const [events, setEvents] = useState([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    fetch('/api/events')
+      .then(res => res.ok ? res.json() : null)
+      .then(data => {
+        if (data?.events) setEvents(data.events)
+        setLoading(false)
+      })
+      .catch(() => setLoading(false))
+  }, [])
+
   const toEvents = () => {
     window.location.href = "/events";
   }
@@ -46,16 +41,23 @@ const Events = () => {
 
       {/* Events Cards Grid */}
       <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 w-full max-w-6xl'>
-        {eventsData.map((event) => (
-          <div key={event.id} className='flex justify-center'>
-            <EventCard 
-              title={event.title}
-              desc={event.desc}
-              image={event.image}
-              date={event.date}
-            />
+        {loading ? (
+          <div className='col-span-full flex justify-center py-12'>
+            <div className='animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-500'></div>
           </div>
-        ))}
+        ) : (
+          events.slice(0, 3).map((event) => (
+            <div key={event.id} className='flex justify-center'>
+              <EventCard 
+                id={event.id}
+                title={event.title}
+                desc={event.description}
+                image={event.image}
+                date={formatDate(event.date)}
+              />
+            </div>
+          ))
+        )}
       </div>
 
       {/* View All Button */}
