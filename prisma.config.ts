@@ -3,12 +3,14 @@
 import "dotenv/config";
 import { defineConfig } from "prisma/config";
 
+// DIRECT_URL = Session pooler (port 5432) – for migrations, Prisma Studio
+// DATABASE_URL = Transaction pooler (port 6543) – for app runtime (lib/db.js)
 export default defineConfig({
   schema: "prisma/schema.prisma",
   migrations: {
     path: "prisma/migrations",
   },
   datasource: {
-    url: process.env["DATABASE_URL"],
+    url: process.env["DIRECT_URL"] ?? process.env["DATABASE_URL"],
   },
 });

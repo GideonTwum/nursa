@@ -1,9 +1,9 @@
 'use client'
-import React, { useState } from 'react'
+import React, { useState, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { FaUserGraduate, FaUserShield } from 'react-icons/fa'
 
-const Page = () => {
+const LoginForm = () => {
     const searchParams = useSearchParams()
     const redirect = searchParams?.get('redirect') || ''
     const [isAdmin, setIsAdmin] = useState(false)
@@ -194,4 +194,10 @@ const Page = () => {
     )
 }
 
-export default Page
+export default function Page() {
+    return (
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+            <LoginForm />
+        </Suspense>
+    )
+}
