@@ -1,9 +1,8 @@
 import { NextResponse } from 'next/server'
-import { writeFile, mkdir } from 'fs/promises'
 import path from 'path'
 import { requireAdmin } from '../../../lib/auth'
+import { getSupabaseStorageClient, getStorageBucket } from '../../../lib/supabaseStorage'
 
-const UPLOAD_DIR = path.join(process.cwd(), 'public', 'uploads')
 const MAX_SIZE = 5 * 1024 * 1024 // 5MB
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp']
 
@@ -16,6 +15,17 @@ export async function POST(request) {
     const payload = requireAdmin(request)
     if (!payload) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
+    const supabase = getSupabaseStorageClient()
+    if (!supabase) {
+      return NextResponse.json(
+        {
+          error:
+            'Storage not configured. Set SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY in your environment.',
+        },
+        { status: 503 }
+      )
     }
 
     const formData = await request.formData()
@@ -44,15 +54,32 @@ export async function POST(request) {
 
     const ext = path.extname(file.name) || '.jpg'
     const baseName = sanitizeFilename(path.basename(file.name, ext))
-    const filename = `${Date.now()}-${baseName}${ext}`
-    const filepath = path.join(UPLOAD_DIR, filename)
+    const objectPath = `${Date.now()}-${baseName}${ext}`
+    const bucket = getStorageBucket()
 
-    await mkdir(UPLOAD_DIR, { recursive: true })
     const bytes = await file.arrayBuffer()
-    await writeFile(filepath, Buffer.from(bytes))
+    const buffer = Buffer.from(bytes)
 
-    const url = `/uploads/${filename}`
-    return NextResponse.json({ url })
+    const { error: uploadError } = await supabase.storage
+      .from(bucket)
+      .upload(objectPath, buffer, {
+        contentType: file.type,
+        upsert: false,
+      })
+
+    if (uploadError) {
+      console.error('Supabase upload error:', uploadError)
+      return NextResponse.json(
+        { error: 'Upload failed', details: uploadError.message },
+        { status: 500 }
+      )
+    }
+
+    const {
+      data: { publicUrl },
+    } = supabase.storage.from(bucket).getPublicUrl(objectPath)
+
+    return NextResponse.json({ url: publicUrl })
   } catch (error) {
     console.error('Upload error:', error)
     return NextResponse.json(
