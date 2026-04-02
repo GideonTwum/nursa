@@ -1,7 +1,6 @@
 'use client'
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'next/navigation'
-import Image from 'next/image'
 import { FaArrowLeft, FaCheckCircle } from 'react-icons/fa'
 
 const Page = () => {
@@ -107,11 +106,10 @@ const Page = () => {
             {order.items?.map((item) => (
               <div key={item.id} className='p-6 flex gap-4'>
                 <div className='relative w-20 h-20 flex-shrink-0 rounded-lg overflow-hidden bg-gray-100'>
-                  <Image
+                  <img
                     src={item.product?.image || '/images/nursa1.png'}
                     alt={item.product?.name || 'Product'}
-                    fill
-                    className='object-cover'
+                    className='absolute inset-0 w-full h-full object-cover'
                   />
                 </div>
                 <div className='flex-1 min-w-0'>

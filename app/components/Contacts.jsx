@@ -87,8 +87,24 @@ const Contacts = () => {
                 <p className='text-white text-lg md:text-xl'>Follow Us</p>
               </div>
               <div className='p-2 flex gap-4 flex-wrap'>
-                  <FaTiktok className='text-xl md:text-2xl text-yellow-500 cursor-pointer hover:scale-110 transition-transform'/>
-                  <FaInstagramSquare className='text-xl md:text-2xl text-yellow-500 cursor-pointer hover:scale-110 transition-transform'/>
+                  <a
+                    href='https://www.tiktok.com/@nursa.connect?_r=1&_t=ZS-95BYKjJM20i'
+                    target='_blank'
+                    rel='noopener noreferrer'
+                    aria-label='NURSA on TikTok'
+                    className='inline-flex text-yellow-500 hover:scale-110 transition-transform'
+                  >
+                    <FaTiktok className='text-xl md:text-2xl' />
+                  </a>
+                  <a
+                    href='https://www.instagram.com/nursa_connect?igsh=NmZnczI0M3VpdWNy'
+                    target='_blank'
+                    rel='noopener noreferrer'
+                    aria-label='NURSA on Instagram'
+                    className='inline-flex text-yellow-500 hover:scale-110 transition-transform'
+                  >
+                    <FaInstagramSquare className='text-xl md:text-2xl' />
+                  </a>
                   <FaFacebook className='text-xl md:text-2xl text-yellow-500 cursor-pointer hover:scale-110 transition-transform'/>
                   <FaSquareXTwitter className='text-xl md:text-2xl text-yellow-500 cursor-pointer hover:scale-110 transition-transform'/>
               </div>

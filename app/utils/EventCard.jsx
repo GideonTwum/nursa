@@ -1,4 +1,3 @@
-import Image from 'next/image'
 import React from 'react'
 import { FaCalendarAlt } from "react-icons/fa";
 
@@ -9,11 +8,10 @@ const EventCard = ({ title, desc, image, date, id }) => {
   return (
     <Wrapper {...wrapperProps}>
         <div className='relative w-full h-48 md:h-52'>
-            <Image 
+            <img
                 src={image}
                 alt={title || 'event image'}
-                fill
-                className='object-cover'
+                className='absolute inset-0 w-full h-full object-cover'
             />
         </div>
         <div className='p-4 md:p-5 flex flex-col gap-3 flex-1'>

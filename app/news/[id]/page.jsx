@@ -1,6 +1,5 @@
 'use client'
 import React, { useState, useEffect } from 'react'
-import Image from 'next/image'
 import { useParams } from 'next/navigation'
 import { FaArrowLeft } from 'react-icons/fa'
 
@@ -79,11 +78,10 @@ const Page = () => {
         <div className='bg-white rounded-xl shadow-lg overflow-hidden'>
           {article.image && (
             <div className='relative w-full h-64 md:h-80'>
-              <Image
+              <img
                 src={article.image}
                 alt={article.title}
-                fill
-                className='object-cover'
+                className='absolute inset-0 w-full h-full object-cover'
               />
             </div>
           )}

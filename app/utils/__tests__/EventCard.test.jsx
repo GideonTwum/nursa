@@ -2,15 +2,6 @@ import React from 'react'
 import { render, screen } from '@testing-library/react'
 import EventCard from '../EventCard'
 
-// Mock next/image - uses createElement to avoid JSX in mock
-jest.mock('next/image', () => {
-  const React = require('react')
-  return {
-    __esModule: true,
-    default: (props) => React.createElement('img', { alt: props.alt, src: props.src }),
-  }
-})
-
 describe('EventCard', () => {
   it('renders event title and description', () => {
     render(

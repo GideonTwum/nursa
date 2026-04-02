@@ -1,6 +1,5 @@
 'use client'
 import React, { useState, useEffect } from 'react'
-import Image from 'next/image'
 import { useParams } from 'next/navigation'
 import { FaArrowLeft, FaCalendarAlt, FaClock, FaMapMarkerAlt } from 'react-icons/fa'
 
@@ -88,11 +87,10 @@ const Page = () => {
       <div className='max-w-4xl mx-auto px-4 py-10 -mt-6'>
         <div className='bg-white rounded-xl shadow-lg overflow-hidden'>
           <div className='relative w-full h-64 md:h-96'>
-            <Image
+            <img
               src={event.image}
               alt={event.title}
-              fill
-              className='object-cover'
+              className='absolute inset-0 w-full h-full object-cover'
             />
           </div>
           <div className='p-6 md:p-10'>

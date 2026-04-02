@@ -1,6 +1,5 @@
 'use client'
 import React, { useState, useEffect } from 'react'
-import Image from 'next/image'
 import { FaArrowLeft, FaTimes, FaChevronLeft, FaChevronRight } from "react-icons/fa"
 
 const Page = () => {
@@ -116,11 +115,10 @@ const Page = () => {
               onClick={() => openLightbox(index)}
               className='group relative aspect-square rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer'
             >
-              <Image 
+              <img
                 src={image.src}
                 alt={image.title}
-                fill
-                className='object-cover group-hover:scale-110 transition-transform duration-500'
+                className='absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-500'
               />
               {/* Overlay */}
               <div className='absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300'>
@@ -167,12 +165,11 @@ const Page = () => {
           </button>
 
           {/* Image */}
-          <div className='relative w-full h-full max-w-4xl max-h-[80vh] mx-4'>
-            <Image 
+          <div className='relative w-full h-full max-w-4xl max-h-[80vh] mx-4 flex items-center justify-center'>
+            <img
               src={filteredImages[currentImageIndex]?.src}
               alt={filteredImages[currentImageIndex]?.title}
-              fill
-              className='object-contain'
+              className='max-w-full max-h-[80vh] w-auto h-auto object-contain'
             />
           </div>
 

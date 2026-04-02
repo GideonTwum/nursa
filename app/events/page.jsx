@@ -1,6 +1,5 @@
 'use client'
 import React, { useState, useEffect } from 'react'
-import Image from 'next/image'
 import { FaCalendarAlt, FaMapMarkerAlt, FaClock, FaArrowLeft } from "react-icons/fa"
 import { MdArticle } from "react-icons/md"
 
@@ -13,11 +12,10 @@ const formatDate = (dateStr) => {
 const EventCard = ({ event }) => (
   <div className='bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 flex flex-col'>
     <div className='relative w-full h-48'>
-      <Image 
+      <img
         src={event.image}
         alt={event.title}
-        fill
-        className='object-cover'
+        className='absolute inset-0 w-full h-full object-cover'
       />
       <div className='absolute top-3 right-3 bg-yellow-500 text-white text-xs font-bold px-3 py-1 rounded-full'>
         Upcoming

@@ -1165,7 +1165,7 @@ const Page = () => {
                                     {galleryImages.map((img) => (
                                         <div key={img.id} className='relative group'>
                                             <div className='aspect-square rounded-lg overflow-hidden bg-gray-100'>
-                                                <Image src={img.url} alt={img.title} width={150} height={150} className='w-full h-full object-cover' />
+                                                <img src={img.url} alt={img.title} width={150} height={150} className='w-full h-full object-cover' />
                                             </div>
                                             <p className='text-sm font-medium text-gray-800 mt-1 truncate'>{img.title}</p>
                                             <p className='text-xs text-gray-500'>{img.category}</p>
@@ -1357,7 +1357,7 @@ const Page = () => {
                                             }}
                                             className='aspect-square rounded-lg overflow-hidden border-2 border-transparent hover:border-green-600 hover:shadow-md transition-all cursor-pointer'
                                         >
-                                            <Image src={img.url} alt={img.title} width={120} height={120} className='w-full h-full object-cover' />
+                                            <img src={img.url} alt={img.title} width={120} height={120} className='w-full h-full object-cover' />
                                         </button>
                                     ))}
                                 </div>

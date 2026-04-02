@@ -1,6 +1,5 @@
 'use client'
 import React, { useState, useEffect } from 'react'
-import Image from 'next/image'
 import { FaArrowLeft, FaShoppingCart, FaTimes, FaPlus, FaMinus, FaTrash } from "react-icons/fa"
 import { MdLocalShipping } from "react-icons/md"
 
@@ -187,11 +186,10 @@ const Page = () => {
               className='bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 flex flex-col'
             >
               <div className='relative w-full h-48'>
-                <Image 
+                <img
                   src={product.image}
                   alt={product.name}
-                  fill
-                  className='object-cover'
+                  className='absolute inset-0 w-full h-full object-cover'
                 />
                 {!product.inStock && (
                   <div className='absolute inset-0 bg-black/50 flex items-center justify-center'>
@@ -274,11 +272,10 @@ const Page = () => {
                   {cart.map((item) => (
                     <div key={item.id} className='flex gap-3 bg-gray-50 rounded-lg p-3'>
                       <div className='relative w-20 h-20 flex-shrink-0 rounded-lg overflow-hidden'>
-                        <Image 
+                        <img
                           src={item.image}
                           alt={item.name}
-                          fill
-                          className='object-cover'
+                          className='absolute inset-0 w-full h-full object-cover'
                         />
                       </div>
                       <div className='flex-1 min-w-0'>
