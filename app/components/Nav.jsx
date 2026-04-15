@@ -61,10 +61,6 @@ const Nav = () => {
         setIsMenuOpen(!isMenuOpen)
     }
 
-    const toGallery = () => {
-        window.location.href = "/gallery"
-    }
-
     const handleLogout = () => {
         localStorage.removeItem('nursa_token')
         localStorage.removeItem('nursa_current_user')
@@ -106,7 +102,7 @@ const Nav = () => {
                 </div>
 
                 <div className='hover:border-b hover:border-green-700 px-2 rounded'>
-                    <a onClick={() => toGallery()} className='text-sm text-green-700 cursor-pointer'>Gallery</a>
+                    <a href='/gallery' className='text-sm text-green-700 cursor-pointer'>Gallery</a>
                 </div>
 
                 <div onClick={() => toElections()} className='hover:border-b hover:border-green-700 px-2 rounded'>
@@ -175,9 +171,9 @@ const Nav = () => {
 
             {/* Mobile Menu */}
             {isMenuOpen && (
-                <div className='absolute top-[70px] left-0 w-full bg-white shadow-lg md:hidden flex flex-col items-center py-4 gap-4'>
+                <div className='absolute top-[70px] left-0 w-full bg-white shadow-lg md:hidden flex flex-col items-center py-4 gap-4 max-h-[85vh] overflow-y-auto overscroll-contain z-[1000] border-t border-gray-100'>
                     {user && (
-                        <div className='flex items-center gap-2 bg-green-50 px-4 py-2 rounded-lg mb-2'>
+                        <div className='flex items-center gap-2 bg-green-50 px-4 py-2 rounded-lg mb-2 shrink-0'>
                             <FaUserCircle className='text-green-700 text-xl' />
                             <div>
                                 <p className='text-sm font-semibold text-green-700'>{user.firstName} {user.lastName}</p>
@@ -186,12 +182,13 @@ const Nav = () => {
                         </div>
                     )}
                     
-                    <a href="/" className='text-sm text-green-700 py-2'>Home</a>
-                    <a href="#about" onClick={toggleMenu} className='text-sm text-green-700 py-2'>About</a>
-                    <p onClick={() => { toShop(); toggleMenu(); }} className='text-sm text-green-700 cursor-pointer py-2'>Shop</p>
-                    <a href="#events" onClick={toggleMenu} className='text-sm text-green-700 py-2'>Events</a>
-                    <a onClick={() => { toGallery(); toggleMenu(); }} className='text-sm text-green-700 cursor-pointer py-2'>Gallery</a>
-                    <a href="#contacts" onClick={toggleMenu} className='text-sm text-green-700 py-2'>Contact</a>
+                    <a href="/" onClick={toggleMenu} className='text-sm text-green-700 py-2 shrink-0'>Home</a>
+                    <a href="#about" onClick={toggleMenu} className='text-sm text-green-700 py-2 shrink-0'>About</a>
+                    <p onClick={() => { toShop(); toggleMenu(); }} className='text-sm text-green-700 cursor-pointer py-2 shrink-0'>Shop</p>
+                    <a href="#events" onClick={toggleMenu} className='text-sm text-green-700 py-2 shrink-0'>Events</a>
+                    <a href='/gallery' onClick={toggleMenu} className='text-sm text-green-700 py-2 shrink-0'>Gallery</a>
+                    <p onClick={() => { toElections(); toggleMenu(); }} className='text-sm text-green-700 cursor-pointer py-2 shrink-0'>Elections</p>
+                    <a href="#contacts" onClick={toggleMenu} className='text-sm text-green-700 py-2 shrink-0'>Contact</a>
                     
                     <div className='flex flex-col gap-2 mt-2 w-full px-8'>
                         {user ? (
