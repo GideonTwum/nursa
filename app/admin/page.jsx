@@ -563,26 +563,29 @@ const Page = () => {
                 </div>
             </div>
 
-            {/* Mobile Navigation */}
-            <div className='md:hidden fixed bottom-0 left-0 right-0 bg-gray-900 text-white p-2 z-50'>
-                <div className='flex justify-around'>
-                    {menuItems.slice(0, 5).map((item) => (
+            {/* Mobile Navigation — all sections (sidebar uses full menuItems; bottom bar previously only showed first 5) */}
+            <div className='md:hidden fixed bottom-0 left-0 right-0 bg-gray-900 text-white px-1 pt-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] z-50 border-t border-gray-700'>
+                <div className='grid grid-cols-4 gap-y-1 gap-x-0'>
+                    {menuItems.map((item) => (
                         <button
                             key={item.id}
+                            type='button'
                             onClick={() => setActiveTab(item.id)}
-                            className={`flex flex-col items-center p-2 rounded cursor-pointer ${
+                            className={`flex flex-col items-center justify-center p-1.5 rounded-lg cursor-pointer min-w-0 min-h-[3.25rem] ${
                                 activeTab === item.id ? 'text-yellow-500' : 'text-gray-400'
                             }`}
                         >
-                            <item.icon className='text-xl' />
-                            <span className='text-xs mt-1'>{item.label}</span>
+                            <item.icon className='text-lg shrink-0' />
+                            <span className='text-[10px] leading-tight mt-0.5 text-center px-0.5 line-clamp-2'>
+                                {item.label}
+                            </span>
                         </button>
                     ))}
                 </div>
             </div>
 
             {/* Main Content */}
-            <div className='flex-1 md:ml-64 p-4 md:p-8 pt-20 md:pt-8 pb-24 md:pb-8'>
+            <div className='flex-1 md:ml-64 p-4 md:p-8 pt-20 md:pt-8 pb-40 md:pb-8'>
                 {activeTab === 'dashboard' && (
                     <div>
                         <h1 className='text-2xl md:text-3xl font-bold text-gray-800 mb-2'>Dashboard</h1>
