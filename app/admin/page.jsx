@@ -714,25 +714,26 @@ const Page = () => {
                                                 <th className='px-6 py-4'>Name</th>
                                                 <th className='px-6 py-4'>Student ID</th>
                                                 <th className='px-6 py-4 hidden md:table-cell'>Program</th>
-                                                <th className='px-6 py-4'>Actions</th>
+                                                <th className='px-6 py-4 sticky right-0 z-20 bg-gray-50 border-l border-gray-200 shadow-[-6px_0_8px_-4px_rgba(0,0,0,0.08)]'>Actions</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             {users.map((user) => (
-                                                <tr key={user.id} className='border-b last:border-0 hover:bg-gray-50'>
+                                                <tr key={user.id} className='group border-b last:border-0 hover:bg-gray-50'>
                                                     <td className='px-6 py-4'>
                                                         <p className='font-medium text-gray-800'>{user.firstName} {user.lastName}</p>
                                                     </td>
                                                     <td className='px-6 py-4 text-gray-600'>{user.studentId}</td>
                                                     <td className='px-6 py-4 text-gray-600 hidden md:table-cell'>{user.program}</td>
-                                                    <td className='px-6 py-4'>
-                                                        <div className='flex items-center gap-2'>
-                                                            <button className='p-2 text-blue-600 hover:bg-blue-50 rounded cursor-pointer' title='View details'>
+                                                    <td className='px-6 py-4 sticky right-0 z-10 bg-white group-hover:bg-gray-50 border-l border-gray-100 shadow-[-6px_0_8px_-4px_rgba(0,0,0,0.08)]'>
+                                                        <div className='flex items-center gap-1'>
+                                                            <button type='button' className='p-2.5 min-h-[40px] min-w-[40px] flex items-center justify-center text-blue-600 hover:bg-blue-50 rounded-lg cursor-pointer' title='View details'>
                                                                 <FaEye />
                                                             </button>
                                                             <button 
+                                                                type='button'
                                                                 onClick={() => handleDeleteUser(user.id)}
-                                                                className='p-2 text-red-600 hover:bg-red-50 rounded cursor-pointer' 
+                                                                className='p-2.5 min-h-[40px] min-w-[40px] flex items-center justify-center text-red-600 hover:bg-red-50 rounded-lg cursor-pointer' 
                                                                 title='Delete user'
                                                             >
                                                                 <FaTrash />
@@ -860,22 +861,22 @@ const Page = () => {
                                                 <th className='px-6 py-4'>Event</th>
                                                 <th className='px-6 py-4'>Date</th>
                                                 <th className='px-6 py-4 hidden md:table-cell'>Location</th>
-                                                <th className='px-6 py-4'>Actions</th>
+                                                <th className='px-6 py-4 sticky right-0 z-20 bg-gray-50 border-l border-gray-200 shadow-[-6px_0_8px_-4px_rgba(0,0,0,0.08)]'>Actions</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             {eventsList.map((e) => (
-                                                <tr key={e.id} className='border-b last:border-0 hover:bg-gray-50'>
+                                                <tr key={e.id} className='group border-b last:border-0 hover:bg-gray-50'>
                                                     <td className='px-6 py-4'>
                                                         <p className='font-medium text-gray-800'>{e.title}</p>
                                                         <p className='text-xs text-gray-500 line-clamp-1'>{e.time}</p>
                                                     </td>
                                                     <td className='px-6 py-4 text-gray-600'>{new Date(e.date).toLocaleDateString('en-US')}</td>
                                                     <td className='px-6 py-4 text-gray-600 hidden md:table-cell line-clamp-1'>{e.location}</td>
-                                                    <td className='px-6 py-4'>
-                                                        <div className='flex items-center gap-2'>
-                                                            <button onClick={() => startEditEvent(e)} className='p-2 text-blue-600 hover:bg-blue-50 rounded cursor-pointer' title='Edit'><FaEdit /></button>
-                                                            <button onClick={() => handleDeleteEvent(e.id)} className='p-2 text-red-600 hover:bg-red-50 rounded cursor-pointer' title='Delete'><FaTrash /></button>
+                                                    <td className='px-6 py-4 sticky right-0 z-10 bg-white group-hover:bg-gray-50 border-l border-gray-100 shadow-[-6px_0_8px_-4px_rgba(0,0,0,0.08)]'>
+                                                        <div className='flex items-center gap-1'>
+                                                            <button type='button' onClick={() => startEditEvent(e)} className='p-2.5 min-h-[40px] min-w-[40px] flex items-center justify-center text-blue-600 hover:bg-blue-50 rounded-lg cursor-pointer' title='Edit'><FaEdit /></button>
+                                                            <button type='button' onClick={() => handleDeleteEvent(e.id)} className='p-2.5 min-h-[40px] min-w-[40px] flex items-center justify-center text-red-600 hover:bg-red-50 rounded-lg cursor-pointer' title='Delete'><FaTrash /></button>
                                                         </div>
                                                     </td>
                                                 </tr>
@@ -1008,12 +1009,12 @@ const Page = () => {
                                                 <th className='px-6 py-4'>Category</th>
                                                 <th className='px-6 py-4'>Price</th>
                                                 <th className='px-6 py-4 hidden md:table-cell'>Stock</th>
-                                                <th className='px-6 py-4'>Actions</th>
+                                                <th className='px-6 py-4 sticky right-0 z-20 bg-gray-50 border-l border-gray-200 shadow-[-6px_0_8px_-4px_rgba(0,0,0,0.08)]'>Actions</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             {products.map((p) => (
-                                                <tr key={p.id} className='border-b last:border-0 hover:bg-gray-50'>
+                                                <tr key={p.id} className='group border-b last:border-0 hover:bg-gray-50'>
                                                     <td className='px-6 py-4'>
                                                         <p className='font-medium text-gray-800'>{p.name}</p>
                                                         <p className='text-xs text-gray-500'>{p.level}</p>
@@ -1021,10 +1022,10 @@ const Page = () => {
                                                     <td className='px-6 py-4 text-gray-600'>{p.category}</td>
                                                     <td className='px-6 py-4 text-gray-600'>GH₵{Number(p.price).toFixed(2)}</td>
                                                     <td className='px-6 py-4 text-gray-600 hidden md:table-cell'>{p.stock}</td>
-                                                    <td className='px-6 py-4'>
-                                                        <div className='flex items-center gap-2'>
-                                                            <button onClick={() => startEditProduct(p)} className='p-2 text-blue-600 hover:bg-blue-50 rounded cursor-pointer' title='Edit'><FaEdit /></button>
-                                                            <button onClick={() => handleDeleteProduct(p.id)} className='p-2 text-red-600 hover:bg-red-50 rounded cursor-pointer' title='Delete'><FaTrash /></button>
+                                                    <td className='px-6 py-4 sticky right-0 z-10 bg-white group-hover:bg-gray-50 border-l border-gray-100 shadow-[-6px_0_8px_-4px_rgba(0,0,0,0.08)]'>
+                                                        <div className='flex items-center gap-1'>
+                                                            <button type='button' onClick={() => startEditProduct(p)} className='p-2.5 min-h-[40px] min-w-[40px] flex items-center justify-center text-blue-600 hover:bg-blue-50 rounded-lg cursor-pointer' title='Edit'><FaEdit /></button>
+                                                            <button type='button' onClick={() => handleDeleteProduct(p.id)} className='p-2.5 min-h-[40px] min-w-[40px] flex items-center justify-center text-red-600 hover:bg-red-50 rounded-lg cursor-pointer' title='Delete'><FaTrash /></button>
                                                         </div>
                                                     </td>
                                                 </tr>
@@ -1060,12 +1061,12 @@ const Page = () => {
                                                 <th className='px-6 py-4'>Total</th>
                                                 <th className='px-6 py-4'>Status</th>
                                                 <th className='px-6 py-4'>Date</th>
-                                                <th className='px-6 py-4'>Actions</th>
+                                                <th className='px-6 py-4 sticky right-0 z-20 bg-gray-50 border-l border-gray-200 shadow-[-6px_0_8px_-4px_rgba(0,0,0,0.08)]'>Actions</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             {orders.map((o) => (
-                                                <tr key={o.id} className='border-b last:border-0 hover:bg-gray-50'>
+                                                <tr key={o.id} className='group border-b last:border-0 hover:bg-gray-50'>
                                                     <td className='px-6 py-4 font-mono text-sm'>{o.id.slice(0, 8)}...</td>
                                                     <td className='px-6 py-4'>
                                                         <p className='font-medium text-gray-800'>{o.user?.firstName} {o.user?.lastName}</p>
@@ -1081,11 +1082,11 @@ const Page = () => {
                                                         }`}>{o.status}</span>
                                                     </td>
                                                     <td className='px-6 py-4 text-gray-600 text-sm'>{new Date(o.createdAt).toLocaleDateString()}</td>
-                                                    <td className='px-6 py-4'>
+                                                    <td className='px-6 py-4 sticky right-0 z-10 bg-white group-hover:bg-gray-50 border-l border-gray-100 shadow-[-6px_0_8px_-4px_rgba(0,0,0,0.08)]'>
                                                         <select
                                                             value={o.status}
                                                             onChange={(e) => handleOrderStatus(o.id, e.target.value)}
-                                                            className='text-sm border rounded px-2 py-1 cursor-pointer'
+                                                            className='text-sm border rounded px-2 py-2 min-h-[40px] min-w-[8rem] cursor-pointer bg-white'
                                                         >
                                                             <option value='PENDING'>PENDING</option>
                                                             <option value='CONFIRMED'>CONFIRMED</option>
@@ -1172,16 +1173,31 @@ const Page = () => {
                             ) : (
                                 <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4'>
                                     {galleryImages.map((img) => (
-                                        <div key={img.id} className='relative group'>
-                                            <div className='aspect-square rounded-lg overflow-hidden bg-gray-100'>
+                                        <div key={img.id} className='relative rounded-lg border border-gray-100 bg-gray-50/50 p-1'>
+                                            <div className='relative aspect-square rounded-lg overflow-hidden bg-gray-100'>
                                                 <img src={img.url} alt={img.title} width={150} height={150} className='w-full h-full object-cover' />
+                                                {/* Always visible on touch; hover-only is unreliable on phones */}
+                                                <div className='absolute top-2 right-2 flex gap-1.5 z-10 drop-shadow-md'>
+                                                    <button
+                                                        type='button'
+                                                        onClick={() => startEditGallery(img)}
+                                                        className='p-2 min-h-[40px] min-w-[40px] flex items-center justify-center bg-blue-600 text-white rounded-lg shadow-sm active:opacity-90'
+                                                        aria-label='Edit image'
+                                                    >
+                                                        <FaEdit className='text-sm' />
+                                                    </button>
+                                                    <button
+                                                        type='button'
+                                                        onClick={() => handleDeleteGallery(img.id)}
+                                                        className='p-2 min-h-[40px] min-w-[40px] flex items-center justify-center bg-red-600 text-white rounded-lg shadow-sm active:opacity-90'
+                                                        aria-label='Delete image'
+                                                    >
+                                                        <FaTrash className='text-sm' />
+                                                    </button>
+                                                </div>
                                             </div>
-                                            <p className='text-sm font-medium text-gray-800 mt-1 truncate'>{img.title}</p>
-                                            <p className='text-xs text-gray-500'>{img.category}</p>
-                                            <div className='absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity'>
-                                                <button onClick={() => startEditGallery(img)} className='p-1.5 bg-blue-500 text-white rounded cursor-pointer'><FaEdit className='text-xs' /></button>
-                                                <button onClick={() => handleDeleteGallery(img.id)} className='p-1.5 bg-red-500 text-white rounded cursor-pointer'><FaTrash className='text-xs' /></button>
-                                            </div>
+                                            <p className='text-sm font-medium text-gray-800 mt-1 truncate px-0.5'>{img.title}</p>
+                                            <p className='text-xs text-gray-500 px-0.5'>{img.category}</p>
                                         </div>
                                     ))}
                                 </div>
@@ -1219,11 +1235,11 @@ const Page = () => {
                                                     <p className='text-gray-600 text-sm mt-2 whitespace-pre-wrap'>{m.message}</p>
                                                     <p className='text-gray-400 text-xs mt-2'>{new Date(m.createdAt).toLocaleString()}</p>
                                                 </div>
-                                                <div className='flex gap-2 flex-shrink-0'>
+                                                <div className='flex gap-2 flex-shrink-0 items-center'>
                                                     {!m.read && (
-                                                        <button onClick={() => handleMarkRead(m.id)} className='px-3 py-1.5 bg-gray-200 hover:bg-gray-300 rounded text-sm cursor-pointer'>Mark read</button>
+                                                        <button type='button' onClick={() => handleMarkRead(m.id)} className='px-3 py-2 min-h-[40px] bg-gray-200 hover:bg-gray-300 rounded-lg text-sm cursor-pointer'>Mark read</button>
                                                     )}
-                                                    <button onClick={() => handleDeleteContact(m.id)} className='p-2 text-red-600 hover:bg-red-50 rounded cursor-pointer' title='Delete'><FaTrash /></button>
+                                                    <button type='button' onClick={() => handleDeleteContact(m.id)} className='p-2.5 min-h-[40px] min-w-[40px] flex items-center justify-center text-red-600 hover:bg-red-50 rounded-lg cursor-pointer' title='Delete'><FaTrash /></button>
                                                 </div>
                                             </div>
                                         </div>
@@ -1315,19 +1331,19 @@ const Page = () => {
                                                 <th className='px-6 py-4'>Title</th>
                                                 <th className='px-6 py-4'>Category</th>
                                                 <th className='px-6 py-4 hidden md:table-cell'>Status</th>
-                                                <th className='px-6 py-4'>Actions</th>
+                                                <th className='px-6 py-4 sticky right-0 z-20 bg-gray-50 border-l border-gray-200 shadow-[-6px_0_8px_-4px_rgba(0,0,0,0.08)]'>Actions</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             {newsArticles.map((a) => (
-                                                <tr key={a.id} className='border-b last:border-0 hover:bg-gray-50'>
+                                                <tr key={a.id} className='group border-b last:border-0 hover:bg-gray-50'>
                                                     <td className='px-6 py-4'><p className='font-medium text-gray-800'>{a.title}</p></td>
                                                     <td className='px-6 py-4 text-gray-600'>{a.category}</td>
                                                     <td className='px-6 py-4 hidden md:table-cell'>{a.published ? <span className='text-green-600'>Published</span> : <span className='text-gray-500'>Draft</span>}</td>
-                                                    <td className='px-6 py-4'>
-                                                        <div className='flex gap-2'>
-                                                            <button onClick={() => startEditNews(a)} className='p-2 text-blue-600 hover:bg-blue-50 rounded cursor-pointer'><FaEdit /></button>
-                                                            <button onClick={() => handleDeleteNews(a.id)} className='p-2 text-red-600 hover:bg-red-50 rounded cursor-pointer'><FaTrash /></button>
+                                                    <td className='px-6 py-4 sticky right-0 z-10 bg-white group-hover:bg-gray-50 border-l border-gray-100 shadow-[-6px_0_8px_-4px_rgba(0,0,0,0.08)]'>
+                                                        <div className='flex gap-1'>
+                                                            <button type='button' onClick={() => startEditNews(a)} className='p-2.5 min-h-[40px] min-w-[40px] flex items-center justify-center text-blue-600 hover:bg-blue-50 rounded-lg cursor-pointer' aria-label='Edit article'><FaEdit /></button>
+                                                            <button type='button' onClick={() => handleDeleteNews(a.id)} className='p-2.5 min-h-[40px] min-w-[40px] flex items-center justify-center text-red-600 hover:bg-red-50 rounded-lg cursor-pointer' aria-label='Delete article'><FaTrash /></button>
                                                         </div>
                                                     </td>
                                                 </tr>
