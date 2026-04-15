@@ -11,10 +11,21 @@ export async function GET() {
 
     const categories = ['All', ...new Set(images.map(img => img.category).filter(Boolean))]
 
-    return NextResponse.json({
-      images,
+    const payload = {
+      images: images.map((img) => ({
+        id: img.id,
+        url: img.url,
+        driveUrl: img.driveUrl,
+        title: img.title,
+        category: img.category,
+        createdAt: img.createdAt
+      })),
       categories,
       totalImages: images.length
+    }
+
+    return NextResponse.json(payload, {
+      headers: { 'Cache-Control': 'no-store, must-revalidate' }
     })
   } catch (error) {
     console.error('Gallery fetch error:', error)
@@ -38,7 +49,7 @@ export async function POST(request) {
     }
 
     const body = await request.json()
-    const { url, title, category } = body
+    const { url, title, category, driveUrl } = body
 
     if (!url || !title || !category) {
       return NextResponse.json(
@@ -47,8 +58,13 @@ export async function POST(request) {
       )
     }
 
+    const drive =
+      driveUrl != null && String(driveUrl).trim() !== ''
+        ? String(driveUrl).trim()
+        : null
+
     const image = await prisma.galleryImage.create({
-      data: { url, title, category }
+      data: { url, title, category, driveUrl: drive }
     })
 
     return NextResponse.json({ image })

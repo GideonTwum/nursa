@@ -221,7 +221,7 @@ const Page = () => {
 
     const [galleryImages, setGalleryImages] = useState([])
     const [imagePickerFor, setImagePickerFor] = useState(null) // 'product' | 'event' | null
-    const [galleryForm, setGalleryForm] = useState({ url: '', title: '', category: 'Campus Life' })
+    const [galleryForm, setGalleryForm] = useState({ url: '', driveUrl: '', title: '', category: 'Campus Life' })
     const [editingGallery, setEditingGallery] = useState(null)
     const [gallerySaving, setGallerySaving] = useState(false)
 
@@ -234,12 +234,12 @@ const Page = () => {
     }
 
     const resetGalleryForm = () => {
-        setGalleryForm({ url: '', title: '', category: 'Campus Life' })
+        setGalleryForm({ url: '', driveUrl: '', title: '', category: 'Campus Life' })
         setEditingGallery(null)
     }
 
     const handleSaveGallery = async () => {
-        const { url, title, category } = galleryForm
+        const { url, driveUrl, title, category } = galleryForm
         if (!url || !title || !category) {
             alert('Please fill in all fields')
             return
@@ -252,7 +252,7 @@ const Page = () => {
             const res = await fetch(apiUrl, {
                 method,
                 headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${t}` },
-                body: JSON.stringify({ url, title, category })
+                body: JSON.stringify({ url, title, category, driveUrl: driveUrl?.trim() || null })
             })
             const data = await res.json().catch(() => ({}))
             if (res.ok) {
@@ -277,7 +277,7 @@ const Page = () => {
 
     const startEditGallery = (img) => {
         setEditingGallery(img)
-        setGalleryForm({ url: img.url, title: img.title, category: img.category })
+        setGalleryForm({ url: img.url, driveUrl: img.driveUrl || '', title: img.title, category: img.category })
     }
 
     const [contactMessages, setContactMessages] = useState([])
@@ -1144,6 +1144,12 @@ const Page = () => {
                                         <option key={c} value={c}>{c}</option>
                                     ))}
                                 </select>
+                                <input
+                                    placeholder='Google Drive link (optional) — “View more” opens this'
+                                    value={galleryForm.driveUrl}
+                                    onChange={e => setGalleryForm(f => ({ ...f, driveUrl: e.target.value }))}
+                                    className='md:col-span-2 px-3 py-2 border rounded-lg'
+                                />
                             </div>
                             <div className='flex gap-2 mt-4'>
                                 <button onClick={handleSaveGallery} disabled={gallerySaving} className='bg-green-700 hover:bg-green-600 text-white px-4 py-2 rounded-lg cursor-pointer disabled:opacity-50'>

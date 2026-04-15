@@ -88,6 +88,8 @@ model Event {
 model GalleryImage {
   id        String   @id @default(uuid())
   url       String
+  /// Opens in a new tab when visitors click "View more" (e.g. full album on Google Drive)
+  driveUrl  String?
   title     String
   category  String
   createdAt DateTime @default(now())

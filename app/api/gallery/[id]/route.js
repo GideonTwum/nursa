@@ -42,12 +42,18 @@ export async function PUT(request, { params }) {
 
     const { id } = await params
     const body = await request.json()
-    const { url, title, category } = body
+    const { url, title, category, driveUrl } = body
 
     const updateData = {}
     if (url != null) updateData.url = url
     if (title != null) updateData.title = title
     if (category != null) updateData.category = category
+    if (driveUrl !== undefined) {
+      updateData.driveUrl =
+        driveUrl != null && String(driveUrl).trim() !== ''
+          ? String(driveUrl).trim()
+          : null
+    }
 
     const image = await prisma.galleryImage.update({
       where: { id },

@@ -1,6 +1,6 @@
 'use client'
 import React, { useState, useEffect } from 'react'
-import { FaArrowLeft, FaTimes, FaChevronLeft, FaChevronRight } from "react-icons/fa"
+import { FaArrowLeft, FaTimes, FaChevronLeft, FaChevronRight, FaExternalLinkAlt } from "react-icons/fa"
 
 const Page = () => {
   const [galleryImages, setGalleryImages] = useState([])
@@ -11,11 +11,18 @@ const Page = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
 
   useEffect(() => {
-    fetch('/api/gallery')
+    fetch('/api/gallery', { cache: 'no-store' })
       .then(res => res.ok ? res.json() : null)
       .then(data => {
         if (data) {
-          setGalleryImages(data.images?.map(img => ({ ...img, src: img.url })) || [])
+          setGalleryImages(
+            data.images?.map(img => {
+              const d = img.driveUrl
+              const driveUrl =
+                typeof d === 'string' && d.trim() ? d.trim() : d || null
+              return { ...img, src: img.url, driveUrl }
+            }) || []
+          )
           setCategories(data.categories || ['All'])
         }
         setLoading(false)
@@ -110,7 +117,7 @@ const Page = () => {
         ) : (
         <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4'>
           {filteredImages.map((image, index) => (
-            <div 
+            <div
               key={image.id}
               onClick={() => openLightbox(index)}
               className='group relative aspect-square rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer'
@@ -120,15 +127,25 @@ const Page = () => {
                 alt={image.title}
                 className='absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-500'
               />
-              {/* Overlay */}
-              <div className='absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300'>
+              <div className='absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300'>
                 <div className='absolute bottom-0 left-0 right-0 p-4'>
                   <h3 className='text-white font-semibold text-sm md:text-base'>{image.title}</h3>
                   <span className='text-white/80 text-xs'>{image.category}</span>
+                  {image.driveUrl && (
+                    <a
+                      href={image.driveUrl}
+                      target='_blank'
+                      rel='noopener noreferrer'
+                      onClick={(e) => e.stopPropagation()}
+                      className='mt-3 inline-flex items-center gap-1.5 text-xs font-semibold text-yellow-300 hover:text-yellow-200 underline-offset-2 hover:underline'
+                    >
+                      <FaExternalLinkAlt className='text-[10px] shrink-0' />
+                      View more (album)
+                    </a>
+                  )}
                 </div>
               </div>
-              {/* Category Badge */}
-              <div className='absolute top-3 left-3'>
+              <div className='absolute top-3 left-3 pointer-events-none'>
                 <span className='bg-yellow-500 text-white text-xs font-medium px-2 py-1 rounded-full'>
                   {image.category}
                 </span>
@@ -145,47 +162,62 @@ const Page = () => {
         )}
       </div>
 
-      {/* Lightbox */}
+      {/* Lightbox: column layout so title + link stay above fold and not covered by image layer */}
       {lightboxOpen && (
-        <div className='fixed inset-0 bg-black/95 z-50 flex items-center justify-center'>
-          {/* Close Button */}
-          <button 
-            onClick={closeLightbox}
-            className='absolute top-4 right-4 text-white/80 hover:text-white text-2xl cursor-pointer z-10 p-2'
-          >
-            <FaTimes />
-          </button>
+        <div className='fixed inset-0 bg-black/95 z-50 flex flex-col'>
+          <div className='flex justify-end p-3 shrink-0'>
+            <button
+              type='button'
+              onClick={closeLightbox}
+              className='text-white/80 hover:text-white text-2xl cursor-pointer p-2'
+              aria-label='Close'
+            >
+              <FaTimes />
+            </button>
+          </div>
 
-          {/* Previous Button */}
-          <button 
-            onClick={goToPrevious}
-            className='absolute left-4 text-white/80 hover:text-white text-3xl cursor-pointer z-10 p-2 hover:bg-white/10 rounded-full transition-colors'
-          >
-            <FaChevronLeft />
-          </button>
-
-          {/* Image */}
-          <div className='relative w-full h-full max-w-4xl max-h-[80vh] mx-4 flex items-center justify-center'>
+          <div className='flex-1 flex items-center justify-center min-h-0 px-14 md:px-20 relative'>
+            <button
+              type='button'
+              onClick={goToPrevious}
+              className='absolute left-2 md:left-4 top-1/2 -translate-y-1/2 text-white/80 hover:text-white text-2xl md:text-3xl p-2 hover:bg-white/10 rounded-full z-10'
+              aria-label='Previous image'
+            >
+              <FaChevronLeft />
+            </button>
             <img
               src={filteredImages[currentImageIndex]?.src}
               alt={filteredImages[currentImageIndex]?.title}
-              className='max-w-full max-h-[80vh] w-auto h-auto object-contain'
+              className='max-w-full max-h-[min(70vh,100%)] w-auto h-auto object-contain'
             />
+            <button
+              type='button'
+              onClick={goToNext}
+              className='absolute right-2 md:right-4 top-1/2 -translate-y-1/2 text-white/80 hover:text-white text-2xl md:text-3xl p-2 hover:bg-white/10 rounded-full z-10'
+              aria-label='Next image'
+            >
+              <FaChevronRight />
+            </button>
           </div>
 
-          {/* Next Button */}
-          <button 
-            onClick={goToNext}
-            className='absolute right-4 text-white/80 hover:text-white text-3xl cursor-pointer z-10 p-2 hover:bg-white/10 rounded-full transition-colors'
-          >
-            <FaChevronRight />
-          </button>
-
-          {/* Image Info */}
-          <div className='absolute bottom-8 left-0 right-0 text-center'>
-            <h3 className='text-white font-semibold text-lg mb-1'>
+          <div className='shrink-0 pb-6 pt-2 px-4 text-center bg-black/40'>
+            <h3 className='text-white font-semibold text-lg mb-2'>
               {filteredImages[currentImageIndex]?.title}
             </h3>
+            {Boolean(
+              filteredImages[currentImageIndex]?.driveUrl &&
+                String(filteredImages[currentImageIndex].driveUrl).trim()
+            ) && (
+              <a
+                href={String(filteredImages[currentImageIndex].driveUrl).trim()}
+                target='_blank'
+                rel='noopener noreferrer'
+                className='inline-flex items-center gap-2 mb-3 px-4 py-2 rounded-lg bg-yellow-500 hover:bg-yellow-400 text-gray-900 font-medium text-sm transition-colors'
+              >
+                <FaExternalLinkAlt className='text-xs' />
+                View more (album / Drive)
+              </a>
+            )}
             <p className='text-white/60 text-sm'>
               {currentImageIndex + 1} of {filteredImages.length}
             </p>

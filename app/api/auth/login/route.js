@@ -83,6 +83,15 @@ export async function POST(request) {
     }
   } catch (error) {
     console.error('Login error:', error)
+    if (error?.code === 'P1001') {
+      return NextResponse.json(
+        {
+          error:
+            'Cannot connect to the database. Use Supabase’s pooled connection for DATABASE_URL (pooler host, port 6543), ensure the project is not paused, and check your network.',
+        },
+        { status: 503 }
+      )
+    }
     return NextResponse.json(
       { error: 'Internal server error', details: error.message },
       { status: 500 }
