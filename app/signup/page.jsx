@@ -12,10 +12,13 @@ const Page = () => {
         program: '',
         role: '',
         adminCode: '',
-        password: ''
+        password: '',
+        confirmPassword: ''
     })
     const [error, setError] = useState('')
     const [loading, setLoading] = useState(false)
+    const [showPassword, setShowPassword] = useState(false)
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
     const handleChange = (e) => {
         setFormData({
@@ -31,6 +34,18 @@ const Page = () => {
         setError('')
 
         try {
+            if (!formData.password || formData.password.length < 6) {
+                setError('Password must be at least 6 characters.')
+                setLoading(false)
+                return
+            }
+
+            if (formData.password !== formData.confirmPassword) {
+                setError('Passwords do not match.')
+                setLoading(false)
+                return
+            }
+
             const payload = isAdmin
                 ? {
                     adminId: formData.adminId,
@@ -91,9 +106,12 @@ const Page = () => {
             program: '',
             role: '',
             adminCode: '',
-            password: ''
+            password: '',
+            confirmPassword: ''
         })
         setError('')
+        setShowPassword(false)
+        setShowConfirmPassword(false)
     }
 
     return (
@@ -277,15 +295,45 @@ const Page = () => {
                     )}
                     <div className='flex flex-col'>
                         <label className='text-sm' htmlFor="password">Password</label>
-                        <input 
-                            type="password" 
-                            id="password"
-                            name="password"
-                            value={formData.password}
-                            onChange={handleChange}
-                            className={`border border-[#ccc] outline-none rounded-lg p-2 w-full text-sm ${isAdmin ? 'focus:border-gray-500' : 'focus:border-green-500'}`}
-                            placeholder='min 6 characters'
-                        />
+                        <div className='relative'>
+                            <input 
+                                type={showPassword ? 'text' : 'password'} 
+                                id="password"
+                                name="password"
+                                value={formData.password}
+                                onChange={handleChange}
+                                className={`border border-[#ccc] outline-none rounded-lg p-2 pr-16 w-full text-sm ${isAdmin ? 'focus:border-gray-500' : 'focus:border-green-500'}`}
+                                placeholder='min 6 characters'
+                            />
+                            <button
+                                type="button"
+                                onClick={() => setShowPassword((v) => !v)}
+                                className='absolute right-2 top-1/2 -translate-y-1/2 text-xs font-semibold text-gray-600 hover:text-gray-900'
+                            >
+                                {showPassword ? 'Hide' : 'Show'}
+                            </button>
+                        </div>
+                    </div>
+                    <div className='flex flex-col'>
+                        <label className='text-sm' htmlFor="confirmPassword">Confirm password</label>
+                        <div className='relative'>
+                            <input 
+                                type={showConfirmPassword ? 'text' : 'password'} 
+                                id="confirmPassword"
+                                name="confirmPassword"
+                                value={formData.confirmPassword}
+                                onChange={handleChange}
+                                className={`border border-[#ccc] outline-none rounded-lg p-2 pr-16 w-full text-sm ${isAdmin ? 'focus:border-gray-500' : 'focus:border-green-500'}`}
+                                placeholder='re-enter your password'
+                            />
+                            <button
+                                type="button"
+                                onClick={() => setShowConfirmPassword((v) => !v)}
+                                className='absolute right-2 top-1/2 -translate-y-1/2 text-xs font-semibold text-gray-600 hover:text-gray-900'
+                            >
+                                {showConfirmPassword ? 'Hide' : 'Show'}
+                            </button>
+                        </div>
                     </div>
                     <button 
                         type="submit"
