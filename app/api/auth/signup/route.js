@@ -2,78 +2,14 @@ import { NextResponse } from 'next/server'
 import prisma from '../../../../lib/db'
 import { hashPassword, generateToken } from '../../../../lib/auth'
 
-const ADMIN_SECRET_CODE = 'NURSA2026'
-
 export async function POST(request) {
   try {
     const body = await request.json()
+    const { studentId, firstName, lastName, program, password, isAdmin } = body
 
-    const { studentId, adminId, firstName, lastName, program, role, adminCode, password, isAdmin } = body
-
+    // Administrator accounts must be provisioned through a trusted, private process.
     if (isAdmin) {
-      // Admin signup
-      if (!adminId || !firstName || !lastName || !role || !adminCode || !password) {
-        return NextResponse.json(
-          { error: 'Missing required fields' },
-          { status: 400 }
-        )
-      }
-
-      if (adminCode !== ADMIN_SECRET_CODE) {
-        return NextResponse.json(
-          { error: 'Invalid admin registration code' },
-          { status: 403 }
-        )
-      }
-
-      if (password.length < 6) {
-        return NextResponse.json(
-          { error: 'Password must be at least 6 characters' },
-          { status: 400 }
-        )
-      }
-
-      const existingAdmin = await prisma.admin.findUnique({
-        where: { adminId }
-      })
-
-      if (existingAdmin) {
-        return NextResponse.json(
-          { error: 'An admin with this ID already exists' },
-          { status: 409 }
-        )
-      }
-
-      const hashedPassword = await hashPassword(password)
-
-      const admin = await prisma.admin.create({
-        data: {
-          adminId,
-          firstName,
-          lastName,
-          role,
-          password: hashedPassword
-        }
-      })
-
-      const token = generateToken({
-        id: admin.id,
-        adminId: admin.adminId,
-        type: 'admin'
-      })
-
-      return NextResponse.json({
-        message: 'Admin account created successfully',
-        user: {
-          id: admin.id,
-          adminId: admin.adminId,
-          firstName: admin.firstName,
-          lastName: admin.lastName,
-          role: admin.role,
-          isAdmin: true
-        },
-        token
-      }, { status: 201 })
+      return NextResponse.json({ error: 'Administrator self-registration is disabled' }, { status: 403 })
     }
 
     // Student signup
